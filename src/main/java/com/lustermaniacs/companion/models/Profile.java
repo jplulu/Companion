@@ -1,20 +1,21 @@
 package com.lustermaniacs.companion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.stereotype.Component;
 
 public class Profile {
 
     // Instance Fields
-    String firstName;
-    String lastName;
-    Byte age;
-    char gender;
-    String[] profilePic;
-    String location;
-    int maxDistance;
-    String bio;
-    int[] surveyResults;
-    int[] sysmatchedUsers;
+    private String firstName;
+    private String lastName;
+    private Byte age;
+    private char gender;
+    private String[] profilePic;
+    private String location;
+    private int maxDistance;
+    private String bio;
+    private int[] surveyResults;
+    private int[] sysmatchedUsers;
 
     // Constructor
     public Profile(@JsonProperty("firstName") String firstName,
