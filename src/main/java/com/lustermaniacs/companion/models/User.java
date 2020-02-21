@@ -1,5 +1,7 @@
 package com.lustermaniacs.companion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.UUID;          // Universally unique identifier class
 
 //Double Checking the push and merge
@@ -11,12 +13,17 @@ public class User {
         Profile profile;
 
     // Constructors
-    public User(String username, String password, UUID id) {
+    public User(@JsonProperty("username") String username,
+                @JsonProperty("password") String password,
+                @JsonProperty("id") UUID id) {
         this.username = username;
         this.password = password;
         this.id = id;
     }
-    public User(String username, String password, UUID id, Profile profile) {
+    public User(@JsonProperty("username") String username,
+                @JsonProperty("password") String password,
+                @JsonProperty("id") UUID id,
+                @JsonProperty("profile") Profile profile) {
         this.username = username;
         this.password = password;
         this.id = id;
