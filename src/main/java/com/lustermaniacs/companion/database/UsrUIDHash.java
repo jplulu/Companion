@@ -36,7 +36,16 @@ class UserProfiles implements UsrDB{
         else return 1;
     }
     @Override
-    public User getMatchedUsers(User user) {
+    public User[] getMatchedUsers(String username) {
+        User[] usr_list = new User[100];
+        matched_users = userID.get(username.hashCode())
+        UUID[] id_list = user.Profile.sysmatched_users;
+        for (int i = 0; i < id_list.length; i++){
+            usr_list(i) = userDB.get(id_list(i));
+        }
         return null;
+    }
+    public getUserByUsername(String username){
+
     }
 }
