@@ -2,6 +2,7 @@ package com.lustermaniacs.companion.models;
 
 import java.util.UUID;          // Universally unique identifier class
 
+//Double Checking the push and merge
 public class User {
     // Instance Fields
         String username;
