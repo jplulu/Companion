@@ -1,25 +1,25 @@
 package com.lustermaniacs.companion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;          // Universally unique identifier class
 
-//Double Checking the push and merge
 public class User {
     // Instance Fields
-        String username;
-        String password;
-        UUID id;
-        Profile profile;
+        private String username;
+        private String password;
+        private UUID id;
+        private Profile profile;
 
     // Constructors
-    public User(@JsonProperty("username") String username,
-                @JsonProperty("password") String password,
-                @JsonProperty("id") UUID id) {
-        this.username = username;
-        this.password = password;
-        this.id = id;
-    }
+//    public User(@JsonProperty("username") String username,
+//                @JsonProperty("password") String password,
+//                @JsonProperty("id") UUID id) {
+//        this.username = username;
+//        this.password = password;
+//        this.id = id;
+//    }
     public User(@JsonProperty("username") String username,
                 @JsonProperty("password") String password,
                 @JsonProperty("id") UUID id,
