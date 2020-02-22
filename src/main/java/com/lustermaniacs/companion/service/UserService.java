@@ -1,5 +1,7 @@
 package com.lustermaniacs.companion.service;
 
+import com.lustermaniacs.companion.database.UsrDB;
+import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +18,20 @@ public class UserService {
         this.userDB = userDB;
     }
 
-    public void addUser(User user) {
-        userDB.addUser(user);
+    public int addUser(User user) {
+        return userDB.addUser(user);
     }
 
     public Optional<User> getUserByUsername(String username) {
-        userDB.getUserByUsername(username);
+        return userDB.getUserByUsername(username);
     }
 
     public List<User> getAllSysmatchUser(String username) {
-        userDB.getMatchedUsers(username);
+        return userDB.getMatchedUsers(username);
     }
 
     public void updateUserByUsername(String username, User newUser) {
-        usrrDB.userUpdate(username, newUser);
+        userDB.updateUserByUsername(username, newUser);
     }
 
 }
