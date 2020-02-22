@@ -1,5 +1,6 @@
 package com.lustermaniacs.companion.controller;
 
+import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ public class UserController {
 
     @PostMapping("/register")
     public void addUser(@RequestBody User user) {
-        userService.addUser(user);
+        if(userService.addUser(user) == 1) {
+            System.out.println("Username already exists");
+        }
     }
 
     @GetMapping("/{username}")

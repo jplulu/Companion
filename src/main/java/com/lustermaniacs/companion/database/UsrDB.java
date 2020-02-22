@@ -3,10 +3,11 @@ package com.lustermaniacs.companion.database;
 import com.lustermaniacs.companion.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
-interface UsrDB{
+public interface UsrDB{
     int addUser(User user);
-    int updateUserByUsername(String username);
+    int updateUserByUsername(String username, User user);
     List<User> getMatchedUsers(String username);
-    User getUserByUsername(String username);
+    Optional<User> getUserByUsername(String username);
 }

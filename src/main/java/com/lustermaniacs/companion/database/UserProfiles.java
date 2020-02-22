@@ -1,35 +1,84 @@
 package com.lustermaniacs.companion.database;
 
 
+import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.User;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-class UserProfiles implements UsrDB{
-    HashMap<String, UUID>userID;
-    HashMap<UUID,User>userDB;
-
-    UserProfiles() {
-        userID = new HashMap<String,UUID>();
-        userDB = new HashMap<UUID,User>();
-    }
+@Repository
+public class UserProfiles implements UsrDB{
+    private static HashMap<String, UUID> userID = new HashMap<>();
+    private static HashMap<UUID,User>userDB = new HashMap<>();
 
     @Override
     public int addUser(User user){
-        if (userID.put(user.getUsername(),user.getId()) != null)
+        Profile newProfile = new Profile();
+        UUID id = UUID.randomUUID();
+        User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile);
+        if (!userID.containsKey(newUser.getUsername())) {
+            userID.put(newUser.getUsername(), id);
+            userDB.put(id, newUser);
+            return 0;
+        }
+        else
             return 1;
-        return 0;
     }
+
+    public Optional<User> getUserByUsername(String username){
+        UUID uid = userID.get(username);
+        return Optional.of(userDB.get(uid));
+    }
+
     @Override
-    public int updateUserByUsername(String username) {
-        User user = getUserByUsername(username);
-        if (userDB.replace(userID.get(username), user) != null)
+    public List<User> getMatchedUsers(String username) {
+        List<User> sysmatchuser = new ArrayList<>();
+        User usr = userDB.get(userID.get(username));
+        List<UUID> matchlist = usr.getProfile().getSysmatchedUsers();
+        for (UUID uuid : matchlist) {
+            sysmatchuser.add(userDB.get(uuid));
+        }
+        return sysmatchuser;
+    }
+
+    @Override
+    public int updateUserByUsername(String username, User user) {
+        UUID uid = userID.get(username);
+        User updatedusr = userDB.get(userID.get(username));
+        if (user.getUsername() != null)
+            updatedusr.setUsername(user.getUsername());
+        if (user.getPassword() != null)
+            updatedusr.setPassword(user.getPassword());
+        if(user.getProfile() != null) {
+            Profile newProfile = user.getProfile();
+            if(newProfile.getFirstName() != null)
+                updatedusr.getProfile().setFirstName(newProfile.getFirstName());
+            if(newProfile.getLastName() != null)
+                updatedusr.getProfile().setLastName(newProfile.getLastName());
+            if(newProfile.getGender() != 0)
+                updatedusr.getProfile().setGender(newProfile.getGender());
+            if(newProfile.getBio() != null)
+                updatedusr.getProfile().setBio(newProfile.getBio());
+            if(newProfile.getAge() != null)
+                updatedusr.getProfile().setAge(newProfile.getAge());
+            if(newProfile.getLocation() != null)
+                updatedusr.getProfile().setLocation(newProfile.getLocation());
+            if(newProfile.getMaxDistance() != 0)
+                updatedusr.getProfile().setMaxDistance(newProfile.getMaxDistance());
+            if(newProfile.getProfilePic() != null)
+                updatedusr.getProfile().setProfilePic(newProfile.getProfilePic());
+            if(newProfile.getSurveyResults() != null)
+                updatedusr.getProfile().setSurveyResults(newProfile.getSurveyResults());
+            if(newProfile.getSysmatchedUsers() != null)
+                updatedusr.getProfile().setSysmatchedUsers(newProfile.getSysmatchedUsers());
+        }
+        updatedusr.setId(uid);
+        if (userDB.replace(userID.get(username), updatedusr) != null)
             return 0;
         else return 1;
     }
+
     public int deleteUser(User user){
         if (userID.remove(user.getUsername()) != null) {
             userDB.remove(user.getId());
@@ -37,17 +86,5 @@ class UserProfiles implements UsrDB{
         }
         else return 1;
     }
-    @Override
-    public List<User> getMatchedUsers(String username) {
-        List<User> sysmatchuser = new ArrayList<User>();
-        User usr = userDB.get(userID.get(username));
-        List<UUID> matchlist = usr.getProfile().getSysmatchedUsers();
-        for (int i = 0; i < matchlist.size(); i++){
-            sysmatchuser.add(userDB.get(matchlist.get(i)));
-        }
-        return sysmatchuser;
-    }
-    public User getUserByUsername(String username){
-        return userDB.get(userID.get(username));
-    }
+
 }

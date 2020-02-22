@@ -3,6 +3,9 @@ package com.lustermaniacs.companion.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.UUID;
+
 public class Profile {
 
     // Instance Fields
@@ -10,24 +13,24 @@ public class Profile {
     private String lastName;
     private Byte age;
     private char gender;
-    private String[] profilePic;
+    private List<String> profilePic;
     private String location;
     private int maxDistance;
     private String bio;
     private int[] surveyResults;
-    private int[] sysmatchedUsers;
+    private List<UUID> sysmatchedUsers;
 
     // Constructor
     public Profile(@JsonProperty("firstName") String firstName,
                    @JsonProperty("lastName") String lastName,
                    @JsonProperty("age") Byte age,
                    @JsonProperty("gender") char gender,
-                   @JsonProperty("profilePic") String[] profilePic,
+                   @JsonProperty("profilePic") List<String> profilePic,
                    @JsonProperty("location") String location,
                    @JsonProperty("maxDistance") int maxDistance,
                    @JsonProperty("bio") String bio,
                    @JsonProperty("surveyResults") int[] surveyResults,
-                   @JsonProperty("sysmatchedUsers") int[] sysmatchedUsers) {
+                   @JsonProperty("sysmatchedUsers") List<UUID> sysmatchedUsers) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -38,6 +41,10 @@ public class Profile {
         this.bio = bio;
         this.surveyResults = surveyResults;
         this.sysmatchedUsers = sysmatchedUsers;
+    }
+
+    public Profile() {
+
     }
 
     public String getFirstName() {
@@ -72,11 +79,11 @@ public class Profile {
         this.gender = gender;
     }
 
-    public String[] getProfilePic() {
+    public List<String> getProfilePic() {
         return profilePic;
     }
 
-    public void setProfilePic(String[] profilePic) {
+    public void setProfilePic(List<String> profilePic) {
         this.profilePic = profilePic;
     }
 
@@ -112,11 +119,11 @@ public class Profile {
         this.surveyResults = surveyResults;
     }
 
-    public int[] getSysmatchedUsers() {
+    public List<UUID> getSysmatchedUsers() {
         return sysmatchedUsers;
     }
 
-    public void setSysmatchedUsers(int[] sysmatchedUsers) {
+    public void setSysmatchedUsers(List<UUID> sysmatchedUsers) {
         this.sysmatchedUsers = sysmatchedUsers;
     }
 }
