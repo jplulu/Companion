@@ -42,4 +42,9 @@ public class UserController {
         userService.updateUserByUsername(username, user);
     }
 
+    @PutMapping("/{username}/survey")
+    public void setSurvey(@PathVariable("username") String username, @RequestBody String[] results){
+        userService.setSurvey(username, results);
+    }
+
 }
