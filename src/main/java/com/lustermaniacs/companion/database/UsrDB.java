@@ -10,4 +10,5 @@ public interface UsrDB{
     int updateUserByUsername(String username, User user);
     List<User> getMatchedUsers(String username);
     Optional<User> getUserByUsername(String username);
+    void setSurvey(String username, String[] results);
 }
