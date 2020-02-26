@@ -87,6 +87,7 @@ public class UserProfiles implements UsrDB{
         else return 1;
     }
 
+
     private void setSurvey(String username, String[] results){
         User userupdate = userDB.get(userID.get(username));
         userupdate.getProfile().setSurveyResults(results);
@@ -119,4 +120,23 @@ public class UserProfiles implements UsrDB{
     }
 
 
+    //Method to match users, waiting on Eric to push the get Survey Results
+    private void matchUsers(String username){
+        List <User> filteredDB = matchingFiltering(username);
+        User niggaToMatch = userDB.get(userID.get(username));
+        int listLength = filteredDB.size();
+        String[] arr1 = niggaToMatch.getProfile().getSurveyResults();
+        for(i = 0; i < listLength;){
+
+            for(int j=0;i<arr1.length;j++){
+                for(int k=0;k<arr2.length;k++){
+                    if(arr1[j]==arr2[k]){
+                        System.out.print(arr1[i] + ",");
+                    }
+                }
+            }
+        }
+
+
+    }
 }
