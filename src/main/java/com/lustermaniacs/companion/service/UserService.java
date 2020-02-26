@@ -34,4 +34,8 @@ public class UserService {
         userDB.updateUserByUsername(username, newUser);
     }
 
+    public void setSurvey(String username, String[] results){
+        userDB.setSurvey(username, results)
+    }
+
 }
