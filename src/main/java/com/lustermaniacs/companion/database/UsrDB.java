@@ -2,8 +2,7 @@ package com.lustermaniacs.companion.database;
 
 import com.lustermaniacs.companion.models.User;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface UsrDB{
     int addUser(User user);
@@ -11,4 +10,6 @@ public interface UsrDB{
     List<User> getMatchedUsers(String username);
     Optional<User> getUserByUsername(String username);
     void setSurvey(String username, String[] results);
+    void matchUsers(String username);
+    boolean matchTwoUsers(User usr1, User usr2, int threshold);
 }

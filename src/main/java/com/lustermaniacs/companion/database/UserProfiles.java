@@ -93,7 +93,7 @@ public class UserProfiles implements UsrDB{
         userDB.replace(userID.get(username), userUpdate);
     }
     // Function to match two given users based on a # of shared interest (threshold)
-    private boolean matchTwoUsers(User usr1, User usr2, int threshold){
+    public boolean matchTwoUsers(User usr1, User usr2, int threshold){
         int usr1Length = usr1.getProfile().getSurveyResults().length;
         // Convert array into arraylist objects in order to use retainAll which only preserves duplicates in both arrays
         ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
@@ -105,7 +105,7 @@ public class UserProfiles implements UsrDB{
             return false;
     }
 
-    private void matchUsers(String username){
+    public void matchUsers(String username){
         User mainUser = userDB.get(userID.get(username));
         List<User> filteredDB = matchingFiltering(username);
         List<UUID> matchedUsers = new ArrayList<>();
