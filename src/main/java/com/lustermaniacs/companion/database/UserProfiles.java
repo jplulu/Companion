@@ -87,11 +87,10 @@ public class UserProfiles implements UsrDB{
         else return 1;
     }
 
-
-    private void setSurvey(String username, String[] results){
-        User userupdate = userDB.get(userID.get(username));
-        userupdate.getProfile().setSurveyResults(results);
-        userDB.replace(userID.get(username), userupdate);
+    public void setSurvey(String username, String[] results){
+        User userUpdate = userDB.get(userID.get(username));
+        userUpdate.getProfile().setSurveyResults(results);
+        userDB.replace(userID.get(username), userUpdate);
     }
     // Function to match two given users based on a # of shared interest (threshold)
     private boolean matchTwoUsers(User usr1, User usr2, int threshold){
@@ -100,7 +99,7 @@ public class UserProfiles implements UsrDB{
         ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
         ArrayList<String> usr2List = new ArrayList<>(Arrays.asList(usr2.getProfile().getSurveyResults()));
         usr1List.retainAll(usr2List);
-        if (usr1List.size() > threshold)
+        if (usr1List.size() >= threshold)
             return true;
         else
             return false;
@@ -109,34 +108,14 @@ public class UserProfiles implements UsrDB{
     private void matchUsers(String username){
         User mainUser = userDB.get(userID.get(username));
         List<User> filteredDB = matchingFiltering(username);
-        List<User> matchedUsers = new ArrayList<>();
+        List<UUID> matchedUsers = new ArrayList<>();
         for(int i = 0; i < filteredDB.size() ; i++) {
+            //match main user with all filtered users and create match if threshold of 4 matches reached
             if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
-                matchedUsers.add(filteredDB.get(i));
+                matchedUsers.add(filteredDB.get(i).getId());
+            //once 100 matches made, stop
             if (matchedUsers.size() > 99)
                 break;
-       }
-
-    }
-
-
-    //Method to match users, waiting on Eric to push the get Survey Results
-    private void matchUsers(String username){
-        List <User> filteredDB = matchingFiltering(username);
-        User niggaToMatch = userDB.get(userID.get(username));
-        int listLength = filteredDB.size();
-        String[] arr1 = niggaToMatch.getProfile().getSurveyResults();
-        for(i = 0; i < listLength;){
-
-            for(int j=0;i<arr1.length;j++){
-                for(int k=0;k<arr2.length;k++){
-                    if(arr1[j]==arr2[k]){
-                        System.out.print(arr1[i] + ",");
-                    }
-                }
-            }
         }
-
-
     }
 }

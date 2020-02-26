@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public void setSurvey(String username, String[] results){
-        userDB.setSurvey(username, results)
+        userDB.setSurvey(username, results);
     }
 
 }
