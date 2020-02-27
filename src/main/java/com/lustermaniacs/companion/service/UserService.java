@@ -58,7 +58,7 @@ public class UserService {
     public List<User> matchingFiltering(String username) throws IOException {
         List<User> filteredUsers = new ArrayList<>();
         String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
-        String apiKey = "AIzaSyC0h0VwJX1pL1Atg1FervFfw4hQDovtNYY";
+        String apiKey = "";
         User curUser = userDB.getUserByUsername(username).get();
         String origin = curUser.getProfile().getLocation();
         int curMaxDist = curUser.getProfile().getMaxDistance();
