@@ -1,7 +1,6 @@
 package com.lustermaniacs.companion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public class Profile {
     private int maxDistance;
     private String bio;
     private int[] surveyResults;
-    private List<UUID> sysmatchedUsers;
+    private List<String> sysmatchedUsers;
 
     // Constructor
     public Profile(@JsonProperty("firstName") String firstName,
@@ -30,7 +29,7 @@ public class Profile {
                    @JsonProperty("maxDistance") int maxDistance,
                    @JsonProperty("bio") String bio,
                    @JsonProperty("surveyResults") int[] surveyResults,
-                   @JsonProperty("sysmatchedUsers") List<UUID> sysmatchedUsers) {
+                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -119,11 +118,11 @@ public class Profile {
         this.surveyResults = surveyResults;
     }
 
-    public List<UUID> getSysmatchedUsers() {
+    public List<String> getSysmatchedUsers() {
         return sysmatchedUsers;
     }
 
-    public void setSysmatchedUsers(List<UUID> sysmatchedUsers) {
+    public void setSysmatchedUsers(List<String> sysmatchedUsers) {
         this.sysmatchedUsers = sysmatchedUsers;
     }
 }
