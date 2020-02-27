@@ -1,5 +1,6 @@
 package com.lustermaniacs.companion.controller;
 
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}/survey")
-    public void setSurvey(@PathVariable("username") String username, @RequestBody String[] results){
+    public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results){
         userService.setSurvey(username, results);
     }
 

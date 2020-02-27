@@ -93,10 +93,11 @@ public class UserProfiles implements UsrDB{
         userupdate.getProfile().setSurveyResults(results);
         userDB.replace(userID.get(username), userupdate);
     }
+
     // Function to match two given users based on a # of shared interest (threshold)
     private boolean matchTwoUsers(User usr1, User usr2, int threshold){
         int usr1Length = usr1.getProfile().getSurveyResults().length;
-        // Convert array into arraylist objects in order to use retainAll which only preserves duplicates in both arrays
+        // Convert array into array list objects in order to use retainAll which only preserves duplicates in both arrays
         ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
         ArrayList<String> usr2List = new ArrayList<>(Arrays.asList(usr2.getProfile().getSurveyResults()));
         usr1List.retainAll(usr2List);
@@ -106,37 +107,20 @@ public class UserProfiles implements UsrDB{
             return false;
     }
 
+    // Function to produce the list of matched users (sysmatchedUsers) for specific user
     private void matchUsers(String username){
         User mainUser = userDB.get(userID.get(username));
         List<User> filteredDB = matchingFiltering(username);
         List<User> matchedUsers = new ArrayList<>();
+        List<UUID> matchedUUID = new ArrayList<>();
         for(int i = 0; i < filteredDB.size() ; i++) {
             if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
                 matchedUsers.add(filteredDB.get(i));
+            //Redundant List, will leave for now in case we want the list in terms of users, not IDs
+            matchedUUID.add(matchedUsers.get(i).getId());
             if (matchedUsers.size() > 99)
                 break;
-       }
-
-    }
-
-
-    //Method to match users, waiting on Eric to push the get Survey Results
-    private void matchUsers(String username){
-        List <User> filteredDB = matchingFiltering(username);
-        User niggaToMatch = userDB.get(userID.get(username));
-        int listLength = filteredDB.size();
-        String[] arr1 = niggaToMatch.getProfile().getSurveyResults();
-        for(i = 0; i < listLength;){
-
-            for(int j=0;i<arr1.length;j++){
-                for(int k=0;k<arr2.length;k++){
-                    if(arr1[j]==arr2[k]){
-                        System.out.print(arr1[i] + ",");
-                    }
-                }
-            }
         }
-
 
     }
 }

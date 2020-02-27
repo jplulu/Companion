@@ -1,12 +1,12 @@
 package com.lustermaniacs.companion.service;
 
 import com.lustermaniacs.companion.database.UsrDB;
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -34,8 +34,9 @@ public class UserService {
         userDB.updateUserByUsername(username, newUser);
     }
 
-    public void setSurvey(String username, String[] results){
-        userDB.setSurvey(username, results)
+    public void setSurvey(String username, SurveyResults results){
+        userDB.setSurvey(username, results);
     }
+
 
 }
