@@ -2,6 +2,7 @@ package com.lustermaniacs.companion.database;
 
 
 import com.lustermaniacs.companion.models.Profile;
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,9 @@ public class UserProfiles implements UsrDB{
     @Override
     public int addUser(User user){
         Profile newProfile = new Profile();
+        SurveyResults newResults = new SurveyResults();
         UUID id = UUID.randomUUID();
-        User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile);
+        User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile, newResults);
         if (!userID.containsKey(newUser.getUsername())) {
             userID.put(newUser.getUsername(), id);
             userDB.put(id, newUser);
@@ -92,11 +94,12 @@ public class UserProfiles implements UsrDB{
     }
 
 
-    private void setSurvey(String username, String[] results){
-        User userupdate = userDB.get(userID.get(username));
-        userupdate.getProfile().setSurveyResults(results);
-        userDB.replace(userID.get(username), userupdate);
+    public void setSurvey(String username, SurveyResults results){
+        User userUpdate = userDB.get(userID.get(username));
+        userUpdate.setSurveyResults(results);
+        userDB.replace(userID.get(username), userUpdate);
     }
+
     // Function to match two given users based on a # of shared interest (threshold)
     private boolean matchTwoUsers(User usr1, User usr2, int threshold){
         int usr1Length = usr1.getProfile().getSurveyResults().length;

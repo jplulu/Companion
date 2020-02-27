@@ -28,7 +28,7 @@ public class Profile {
                    @JsonProperty("location") String location,
                    @JsonProperty("maxDistance") int maxDistance,
                    @JsonProperty("bio") String bio,
-                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers),
+                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers,
                    @JsonProperty("surveyResults") String[] surveyResults) {
         this.firstName = firstName;
         this.lastName = lastName;

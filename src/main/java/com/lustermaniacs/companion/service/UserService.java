@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.lustermaniacs.companion.database.UsrDB;
 import com.lustermaniacs.companion.models.Profile;
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,8 +88,7 @@ public class UserService {
             ArrayNode element = (ArrayNode) rows.get(0).get("elements");
             int distance = (int) ((element.get(0).path("distance").path("value").asInt()) * 0.00062137119);
             if(distance <= maxDist) {
-                curUser.getProfile().getSysmatchedUsers().add(user.getUsername());
-                user.getProfile().getSysmatchedUsers().add(curUser.getUsername());
+                filteredUsers.add(user);
             }
         }
 
@@ -98,7 +98,7 @@ public class UserService {
         return filteredUsers;
     }
 
-    public void setSurvey(String username, String[] results){
-        userDB.setSurvey(username, results)
+    public void setSurvey(String username, SurveyResults results){
+        userDB.setSurvey(username, results);
     }
 }
