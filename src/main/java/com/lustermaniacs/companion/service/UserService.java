@@ -97,4 +97,8 @@ public class UserService {
 
         return filteredUsers;
     }
+
+    public void setSurvey(String username, String[] results){
+        userDB.setSurvey(username, results)
+    }
 }

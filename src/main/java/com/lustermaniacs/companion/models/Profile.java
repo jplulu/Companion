@@ -16,8 +16,8 @@ public class Profile {
     private String location;
     private int maxDistance;
     private String bio;
-    private int[] surveyResults;
     private List<String> sysmatchedUsers;
+    private String[] surveyResults;
 
     // Constructor
     public Profile(@JsonProperty("firstName") String firstName,
@@ -28,8 +28,8 @@ public class Profile {
                    @JsonProperty("location") String location,
                    @JsonProperty("maxDistance") int maxDistance,
                    @JsonProperty("bio") String bio,
-                   @JsonProperty("surveyResults") int[] surveyResults,
-                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers) {
+                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers),
+                   @JsonProperty("surveyResults") String[] surveyResults) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -110,11 +110,11 @@ public class Profile {
         this.bio = bio;
     }
 
-    public int[] getSurveyResults() {
+    public String[] getSurveyResults() {
         return surveyResults;
     }
 
-    public void setSurveyResults(int[] surveyResults) {
+    public void setSurveyResults(String[] surveyResults) {
         this.surveyResults = surveyResults;
     }
 
