@@ -37,11 +37,29 @@ public class UserService {
         userDB.setSurvey(username, results);
     }
     // Function to match two given users based on a # of shared interest (threshold)
-    public void matchTwoUsers(User usr1, User usr2, int threshold){
-        userDB.matchTwoUsers(usr1, usr2, threshold);
+    public boolean matchTwoUsers(User usr1, User usr2, int threshold){
+        int usr1Length = usr1.getProfile().getSurveyResults().length;
+        // Convert array into arraylist objects in order to use retainAll which only preserves duplicates in both arrays
+        ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
+        ArrayList<String> usr2List = new ArrayList<>(Arrays.asList(usr2.getProfile().getSurveyResults()));
+        usr1List.retainAll(usr2List);
+        if (usr1List.size() >= threshold)
+            return true;
+        else
+            return false;
     }
 
     public void matchUsers(String username){
-        userDB.matchUsers(username);
+        User mainUser = getUserByUsername(username).get();
+        List<User> filteredDB = matchingFiltering(username);
+        List<UUID> matchedUsers = new ArrayList<>();
+        for(int i = 0; i < filteredDB.size() ; i++) {
+            //match main user with all filtered users and create match if threshold of 4 matches reached
+            if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
+                matchedUsers.add(filteredDB.get(i).getId());
+            //once 100 matches made, stop
+            if (matchedUsers.size() > 99)
+                break;
+        }
     }
 }

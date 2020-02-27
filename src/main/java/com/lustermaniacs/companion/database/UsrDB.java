@@ -10,6 +10,4 @@ public interface UsrDB{
     List<User> getMatchedUsers(String username);
     Optional<User> getUserByUsername(String username);
     void setSurvey(String username, String[] results);
-    void matchUsers(String username);
-    boolean matchTwoUsers(User usr1, User usr2, int threshold);
 }
