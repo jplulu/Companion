@@ -26,6 +26,10 @@ public class UserProfiles implements UsrDB{
             return 1;
     }
 
+    public List<User> getAllUsers() {
+        return new ArrayList<>(userDB.values());
+    }
+
     public Optional<User> getUserByUsername(String username){
         UUID uid = userID.get(username);
         return Optional.of(userDB.get(uid));
@@ -35,9 +39,9 @@ public class UserProfiles implements UsrDB{
     public List<User> getMatchedUsers(String username) {
         List<User> sysmatchuser = new ArrayList<>();
         User usr = userDB.get(userID.get(username));
-        List<UUID> matchlist = usr.getProfile().getSysmatchedUsers();
-        for (UUID uuid : matchlist) {
-            sysmatchuser.add(userDB.get(uuid));
+        List<String> matchlist = usr.getProfile().getSysmatchedUsers();
+        for (String user : matchlist) {
+            sysmatchuser.add(userDB.get(userID.get(user)));
         }
         return sysmatchuser;
     }

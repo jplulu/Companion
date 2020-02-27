@@ -1,7 +1,6 @@
 package com.lustermaniacs.companion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;          // Universally unique identifier class
 
@@ -12,14 +11,7 @@ public class User {
         private UUID id;
         private Profile profile;
 
-    // Constructors
-//    public User(@JsonProperty("username") String username,
-//                @JsonProperty("password") String password,
-//                @JsonProperty("id") UUID id) {
-//        this.username = username;
-//        this.password = password;
-//        this.id = id;
-//    }
+        //Constructors
     public User(@JsonProperty("username") String username,
                 @JsonProperty("password") String password,
                 @JsonProperty("id") UUID id,
@@ -31,7 +23,6 @@ public class User {
     }
 
     // Getters and Setters
-
 
     public String getUsername() {
         return username;
