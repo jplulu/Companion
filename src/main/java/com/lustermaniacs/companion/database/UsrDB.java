@@ -3,8 +3,7 @@ package com.lustermaniacs.companion.database;
 import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface UsrDB{
     int addUser(User user);
