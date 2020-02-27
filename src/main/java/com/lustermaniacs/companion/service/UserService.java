@@ -1,11 +1,25 @@
 package com.lustermaniacs.companion.service;
 
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.lustermaniacs.companion.database.UsrDB;
+import com.lustermaniacs.companion.models.Profile;
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @Service
 public class UserService {
@@ -25,6 +39,10 @@ public class UserService {
         return userDB.getUserByUsername(username);
     }
 
+    public Optional<User> getUserByID(String username) {
+        return userDB.getUserByUsername(username);
+    }
+
     public List<User> getAllSysmatchUser(String username) {
         return userDB.getMatchedUsers(username);
     }
@@ -33,9 +51,55 @@ public class UserService {
         userDB.updateUserByUsername(username, newUser);
     }
 
-    public void setSurvey(String username, String[] results){
+    public void setSurvey(String username, SurveyResults results){
         userDB.setSurvey(username, results);
     }
+  
+    public List<User> matchingFiltering(String username) throws IOException {
+        List<User> filteredUsers = new ArrayList<>();
+        String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
+        String apiKey = "AIzaSyC0h0VwJX1pL1Atg1FervFfw4hQDovtNYY";
+        User curUser = userDB.getUserByUsername(username).get();
+        String origin = curUser.getProfile().getLocation();
+        int curMaxDist = curUser.getProfile().getMaxDistance();
+        List<User> allUsers = userDB.getAllUsers();
+
+        for(User user: allUsers) {
+            String dest = user.getProfile().getLocation();
+            int maxDist = Math.min(curMaxDist, user.getProfile().getMaxDistance());
+            String url = baseURL + URLEncoder.encode(origin, StandardCharsets.UTF_8) +
+                    "&destinations=" + URLEncoder.encode(dest, StandardCharsets.UTF_8) +
+                    "&key=" + apiKey;
+            URL obj = new URL(url);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonResponse = mapper.readTree(response.toString());
+            ArrayNode rows = (ArrayNode) jsonResponse.path("rows");
+            ArrayNode element = (ArrayNode) rows.get(0).get("elements");
+            int distance = (int) ((element.get(0).path("distance").path("value").asInt()) * 0.00062137119);
+            if(distance <= maxDist) {
+                filteredUsers.add(user);
+            }
+        }
+
+        //String origin = "New York, NY, USA";
+        // String dest = "Washington, DC, USA";
+
+        return filteredUsers;
+    }
+  
     // Function to match two given users based on a # of shared interest (threshold)
     public boolean matchTwoUsers(User usr1, User usr2, int threshold){
         int usr1Length = usr1.getProfile().getSurveyResults().length;
