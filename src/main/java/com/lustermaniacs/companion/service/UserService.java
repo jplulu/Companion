@@ -54,7 +54,8 @@ public class UserService {
     public void setSurvey(String username, SurveyResults results){
         userDB.setSurvey(username, results);
     }
-  
+
+    // Function to filter out users who do not meet target person's criteria from their "matching pool"
     public List<User> matchingFiltering(String username) throws IOException {
         List<User> filteredUsers = new ArrayList<>();
         String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
@@ -113,7 +114,7 @@ public class UserService {
             return false;
     }
 
-    public void matchUsers(String username){
+    public void matchUsers(String username) throws IOException {
         User mainUser = getUserByUsername(username).get();
         List<User> filteredDB = matchingFiltering(username);
         List<UUID> matchedUsers = new ArrayList<>();
