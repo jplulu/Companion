@@ -2,6 +2,7 @@ package com.lustermaniacs.companion.database;
 
 
 import com.lustermaniacs.companion.models.Profile;
+import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,9 @@ public class UserProfiles implements UsrDB{
     @Override
     public int addUser(User user){
         Profile newProfile = new Profile();
+        SurveyResults newResults = new SurveyResults();
         UUID id = UUID.randomUUID();
-        User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile);
+        User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile, newResults);
         if (!userID.containsKey(newUser.getUsername())) {
             userID.put(newUser.getUsername(), id);
             userDB.put(id, newUser);
@@ -24,6 +26,10 @@ public class UserProfiles implements UsrDB{
         }
         else
             return 1;
+    }
+
+    public List<User> getAllUsers() {
+        return new ArrayList<>(userDB.values());
     }
 
     public Optional<User> getUserByUsername(String username){
@@ -35,9 +41,9 @@ public class UserProfiles implements UsrDB{
     public List<User> getMatchedUsers(String username) {
         List<User> sysmatchuser = new ArrayList<>();
         User usr = userDB.get(userID.get(username));
-        List<UUID> matchlist = usr.getProfile().getSysmatchedUsers();
-        for (UUID uuid : matchlist) {
-            sysmatchuser.add(userDB.get(uuid));
+        List<String> matchlist = usr.getProfile().getSysmatchedUsers();
+        for (String user : matchlist) {
+            sysmatchuser.add(userDB.get(userID.get(user)));
         }
         return sysmatchuser;
     }
@@ -79,7 +85,7 @@ public class UserProfiles implements UsrDB{
         else return 1;
     }
 
-    public int deleteUser(User user){
+    public int deleteUser(User user) {
         if (userID.remove(user.getUsername()) != null) {
             userDB.remove(user.getId());
             return 0;
@@ -87,40 +93,9 @@ public class UserProfiles implements UsrDB{
         else return 1;
     }
 
-
-    private void setSurvey(String username, String[] results){
-        User userupdate = userDB.get(userID.get(username));
-        userupdate.getProfile().setSurveyResults(results);
-        userDB.replace(userID.get(username), userupdate);
-    }
-
-    // Function to match two given users based on a # of shared interest (threshold)
-    private boolean matchTwoUsers(User usr1, User usr2, int threshold){
-        int usr1Length = usr1.getProfile().getSurveyResults().length;
-        // Convert array into array list objects in order to use retainAll which only preserves duplicates in both arrays
-        ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
-        ArrayList<String> usr2List = new ArrayList<>(Arrays.asList(usr2.getProfile().getSurveyResults()));
-        usr1List.retainAll(usr2List);
-        if (usr1List.size() > threshold)
-            return true;
-        else
-            return false;
-    }
-
-    // Function to produce the list of matched users (sysmatchedUsers) for specific user
-    private void matchUsers(String username){
-        User mainUser = userDB.get(userID.get(username));
-        List<User> filteredDB = matchingFiltering(username);
-        List<User> matchedUsers = new ArrayList<>();
-        List<UUID> matchedUUID = new ArrayList<>();
-        for(int i = 0; i < filteredDB.size() ; i++) {
-            if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
-                matchedUsers.add(filteredDB.get(i));
-            //Redundant List, will leave for now in case we want the list in terms of users, not IDs
-            matchedUUID.add(matchedUsers.get(i).getId());
-            if (matchedUsers.size() > 99)
-                break;
-        }
-
+    public void setSurvey(String username, SurveyResults results) {
+        User userUpdate = userDB.get(userID.get(username));
+        userUpdate.setSurveyResults(results);
+        userDB.replace(userID.get(username), userUpdate);
     }
 }

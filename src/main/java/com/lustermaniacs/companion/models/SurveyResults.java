@@ -16,6 +16,10 @@ public class SurveyResults{
     int maxAge;
     int minAge;
 
+    public SurveyResults() {
+
+    }
+
     public SurveyResults(@JsonProperty("sportsAnswers") List <String> sportsAnswers,
                          @JsonProperty("foodAnswers") List<String> foodAnswers,
                          @JsonProperty("musicAnswers") List<String> musicAnswers,
