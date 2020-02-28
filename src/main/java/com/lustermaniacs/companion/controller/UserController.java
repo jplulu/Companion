@@ -7,9 +7,8 @@ import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @RequestMapping("/user")
 @RestController
@@ -30,9 +29,16 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public User getUserByUserName(@PathVariable("username") String username) {
-        return userService.getUserByUsername(username)
-                .orElse(null);
+    public Optional<User> getUserByUserName(@PathVariable("username") String username) {
+        if (userService.getUserByUsername(username).isPresent())
+            return userService.getUserByUsername(username);
+        else {
+            System.out.println("User does not exists");
+            return null;
+        }
+
+//        return userService.getUserByUsername(username)
+//                .orElse(null);
     }
 
     @GetMapping("/{username}/sysmatchedusers")
