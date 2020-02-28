@@ -114,4 +114,14 @@ public class Profile {
     public void setSysmatchedUsers(List<String> sysmatchedUsers) {
         this.sysmatchedUsers = sysmatchedUsers;
     }
+
+    // Method to add a user to someone's sysmatched list, which is stored as list of usernames
+    public void addSysmatchedUser(String userName){
+        this.sysmatchedUsers.add(userName);
+    }
+
+    // Method to remove a user from someone's sysmatched list
+    public void removeSysmatchedUser(String userName){
+        this.sysmatchedUsers.remove(userName);
+    }
 }
