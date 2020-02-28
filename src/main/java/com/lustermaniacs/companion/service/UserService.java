@@ -102,18 +102,35 @@ public class UserService {
   
     // Function to match two given users based on a # of shared interest (threshold)
     public boolean matchTwoUsers(User usr1, User usr2, int threshold){
-        int usr1Length = usr1.getProfile().getSurveyResults().length;
-        // Convert array into arraylist objects in order to use retainAll which only preserves duplicates in both arrays
-        ArrayList<String> usr1List = new ArrayList<>(Arrays.asList(usr1.getProfile().getSurveyResults()));
-        ArrayList<String> usr2List = new ArrayList<>(Arrays.asList(usr2.getProfile().getSurveyResults()));
-        usr1List.retainAll(usr2List);
-        if (usr1List.size() >= threshold)
+        // Initialize a variable to keep track of matches
+        int numMatches = 0;
+
+        ArrayList<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
+        usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
+        ArrayList<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
+        usr1Food.retainAll(usr2.getSurveyResults().getFoodAnswers());
+        ArrayList<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
+        usr1Music.retainAll(usr2.getSurveyResults().getMusicAnswers());
+        ArrayList<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
+        usr1Hobby.retainAll(usr2.getSurveyResults().getHobbyAnswers());
+
+        numMatches += usr1Sport.size();
+        numMatches += usr1Food.size();
+        numMatches += usr1Music.size();
+        numMatches += usr1Hobby.size();
+
+        if (usr1.getSurveyResults().getPersonalityType() == usr2.getSurveyResults().getPersonalityType())
+            numMatches++;
+        if (usr1.getSurveyResults().getLikesAnimals() == usr2.getSurveyResults().getLikesAnimals())
+            numMatches++;
+
+        if (numMatches >= threshold)
             return true;
         else
             return false;
     }
 
-    public void matchUsers(String username){
+    public void matchUsers(String username) throws IOException {
         User mainUser = getUserByUsername(username).get();
         List<User> filteredDB = matchingFiltering(username);
         List<UUID> matchedUsers = new ArrayList<>();
