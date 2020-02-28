@@ -51,38 +51,46 @@ public class UserProfiles implements UsrDB{
     @Override
     public int updateUserByUsername(String username, User user) {
         UUID uid = userID.get(username);
-        User updatedusr = userDB.get(userID.get(username));
-        if (user.getUsername() != null)
-            updatedusr.setUsername(user.getUsername());
-        if (user.getPassword() != null)
-            updatedusr.setPassword(user.getPassword());
-        if(user.getProfile() != null) {
-            Profile newProfile = user.getProfile();
-            if(newProfile.getFirstName() != null)
-                updatedusr.getProfile().setFirstName(newProfile.getFirstName());
-            if(newProfile.getLastName() != null)
-                updatedusr.getProfile().setLastName(newProfile.getLastName());
-            if(newProfile.getGender() != 0)
-                updatedusr.getProfile().setGender(newProfile.getGender());
-            if(newProfile.getBio() != null)
-                updatedusr.getProfile().setBio(newProfile.getBio());
-            if(newProfile.getAge() != null)
-                updatedusr.getProfile().setAge(newProfile.getAge());
-            if(newProfile.getLocation() != null)
-                updatedusr.getProfile().setLocation(newProfile.getLocation());
-            if(newProfile.getMaxDistance() != 0)
-                updatedusr.getProfile().setMaxDistance(newProfile.getMaxDistance());
-            if(newProfile.getProfilePic() != null)
-                updatedusr.getProfile().setProfilePic(newProfile.getProfilePic());
-            if(newProfile.getSurveyResults() != null)
-                updatedusr.getProfile().setSurveyResults(newProfile.getSurveyResults());
-            if(newProfile.getSysmatchedUsers() != null)
-                updatedusr.getProfile().setSysmatchedUsers(newProfile.getSysmatchedUsers());
+        User updatedUser = userDB.get(uid);
+        if(user.getUsername() != null) {
+            userID.remove(username);
+            userID.put(user.getUsername(), uid);
+            updatedUser.setUsername(user.getUsername());
         }
-        updatedusr.setId(uid);
-        if (userDB.replace(userID.get(username), updatedusr) != null)
-            return 0;
-        else return 1;
+        if(user.getPassword() != null) {
+            updatedUser.setPassword(user.getPassword());
+        }
+        userDB.replace(uid, updatedUser);
+        return 0;
+    }
+
+    public void updateUserProfile(String username, Profile profile) {
+        User userUpdate = userDB.get(userID.get(username));
+        Profile newProfile = userUpdate.getProfile();
+        if(profile.getFirstName() != null)
+            newProfile.setFirstName(profile.getFirstName());
+        if(profile.getLastName() != null)
+            newProfile.setLastName(profile.getLastName());
+        if(profile.getGender() != 0)
+            newProfile.setGender(profile.getGender());
+        if(profile.getBio() != null)
+            newProfile.setBio(profile.getBio());
+        if(profile.getAge() != null)
+            newProfile.setAge(profile.getAge());
+        if(profile.getLocation() != null)
+            newProfile.setLocation(profile.getLocation());
+        if(profile.getMaxDistance() != 0)
+            newProfile.setMaxDistance(profile.getMaxDistance());
+        if(profile.getProfilePic() != null)
+            newProfile.setProfilePic(profile.getProfilePic());
+       userUpdate.setProfile(newProfile);
+        userDB.replace(userID.get(username), userUpdate);
+    }
+
+    public void setSurvey(String username, SurveyResults results) {
+        User userUpdate = userDB.get(userID.get(username));
+        userUpdate.setSurveyResults(results);
+        userDB.replace(userID.get(username), userUpdate);
     }
 
     public int deleteUser(User user) {
@@ -93,9 +101,4 @@ public class UserProfiles implements UsrDB{
         else return 1;
     }
 
-    public void setSurvey(String username, SurveyResults results) {
-        User userUpdate = userDB.get(userID.get(username));
-        userUpdate.setSurveyResults(results);
-        userDB.replace(userID.get(username), userUpdate);
-    }
 }

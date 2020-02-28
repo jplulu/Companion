@@ -1,5 +1,6 @@
 package com.lustermaniacs.companion.controller;
 
+import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.UserService;
@@ -42,6 +43,11 @@ public class UserController {
     @PutMapping("/{username}")
     public void updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
         userService.updateUserByUsername(username, user);
+    }
+
+    @PutMapping("/{username}/profile")
+    public void updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
+        userService.updateUserProfile(username, profile);
     }
 
     @PutMapping("/{username}/survey")
