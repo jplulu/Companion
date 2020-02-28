@@ -67,4 +67,14 @@ public class User {
         this.profile = profile;
     }
 
+    // Method to add a user to someone's sysmatched list, which is stored as list of usernames
+    public void addSysmatchedUser(String userName){
+        this.profile.addSysmatchedUser(userName);
+    }
+
+    // Method to remove a user from someone's sysmatched list
+    public void removeSysmatchedUser(String userName){
+        this.profile.removeSysmatchedUser(userName);
+    }
+
 }
