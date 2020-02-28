@@ -134,10 +134,7 @@ public class UserService {
             numMatches++;
             numMatches2++;
 
-        if (numMatches >= threshold)
-            return true;
-        else
-            return false;
+        return numMatches >= threshold;
     }
 
     public void matchUsers(String username) throws IOException {
