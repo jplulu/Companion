@@ -7,6 +7,7 @@ import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,16 +49,24 @@ public class UserController {
 
     @PutMapping("/{username}")
     public void updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
-        userService.updateUserByUsername(username, user);
+        if (userService.updateUserByUsername(username, user) == 1)
+            System.out.println("Username already exists, changes not made.");
     }
 
     @PutMapping("/{username}/profile")
     public void updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
-        userService.updateUserProfile(username, profile);
+        int errCode = userService.updateUserProfile(username, profile);
+        switch(errCode) {
+            case 0:
+                break;
+            case 1:
+                System.out.println("Profile was updated ");
+        }
+
     }
 
     @PutMapping("/{username}/survey")
-    public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results){
+    public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
         userService.setSurvey(username, results);
     }
 

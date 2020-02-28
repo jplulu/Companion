@@ -44,16 +44,17 @@ public class UserService {
         return userDB.getMatchedUsers(username);
     }
 
-    public void updateUserByUsername(String username, User newUser) {
-        userDB.updateUserByUsername(username, newUser);
+    public int updateUserByUsername(String username, User newUser) {
+        return userDB.updateUserByUsername(username, newUser);
     }
 
-    public void updateUserProfile(String username, Profile profile) {
-        userDB.updateUserProfile(username, profile);
+    public int updateUserProfile(String username, Profile profile) {
+        return userDB.updateUserProfile(username, profile);
     }
 
-    public void setSurvey(String username, SurveyResults results){
+    public void setSurvey(String username, SurveyResults results) throws IOException {
         userDB.setSurvey(username, results);
+        matchUsers(username);
     }
 
     public List<User> filterByGender(User curUser) {
@@ -179,10 +180,8 @@ public class UserService {
     public boolean matchTwoUsers(User usr1, User usr2, int threshold){
         // Initialize a variable to keep track of matches
         int numMatches = 0;
-        int numMatches2 = 0;
-
+        //  Compare profile parameters and count how many same results
         List<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
-        //retainAll leaves usr1List with only the shared traits
         usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
         List<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
         usr1Food.retainAll(usr2.getSurveyResults().getFoodAnswers());
@@ -195,29 +194,42 @@ public class UserService {
         numMatches += usr1Food.size();
         numMatches += usr1Music.size();
         numMatches += usr1Hobby.size();
-        numMatches2 = usr1Sport.size() + usr1Food.size() + usr1Music.size() + usr1Hobby.size();
 
         if (usr1.getSurveyResults().getPersonalityType() == usr2.getSurveyResults().getPersonalityType())
             numMatches++;
-            numMatches2++;
         if (usr1.getSurveyResults().getLikesAnimals() == usr2.getSurveyResults().getLikesAnimals())
             numMatches++;
-            numMatches2++;
 
-        return numMatches >= threshold;
+        if (numMatches >= threshold) {
+            usr2.addSysMatchUser(usr1.getUsername());
+            return true;
+        }
+        else
+            return false;
     }
 
     public void matchUsers(String username) throws IOException {
         User mainUser = getUserByUsername(username).get();
-        List<User> filteredDB = matchingFilter(username);
-        List<UUID> matchedUsers = new ArrayList<>();
-        for (User user : filteredDB) {
+        // Check if already matched and remove from other peoples
+        if (mainUser.getProfile().getSysmatchedUsers().isEmpty()) {
+            List<String> userMatches = mainUser.getProfile().getSysmatchedUsers();
+            //Iterate through user matches and have matched users delete main user from their lists
+            for (int i = 0; i > userMatches.size(); i++) {
+                User matchedUser = getUserByUsername(userMatches.get(i)).get();
+                matchedUser.getProfile().delSysMatchUser(mainUser.getUsername());
+            }
+        }
+        //  Go through a filtered user database and attempt to get 100 matches
+        List<User> filteredDB = matchingFiltering(username);
+        List<String> matchedUsers = new ArrayList<>();
+        for(int i = 0; i < filteredDB.size() ; i++) {
             //match main user with all filtered users and create match if threshold of 4 matches reached
-            if (matchTwoUsers(mainUser, user, 4))
-                matchedUsers.add(user.getId());
+            if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
+                matchedUsers.add(filteredDB.get(i).getUsername());
             //once 100 matches made, stop
             if (matchedUsers.size() > 99)
                 break;
         }
+        mainUser.getProfile().setSysmatchedUsers(matchedUsers);
     }
 }
