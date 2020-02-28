@@ -130,7 +130,7 @@ public class UserService {
             numMatches++;
 
         if (numMatches >= threshold) {
-            usr2.addSysMatchUser(usr1.getUsername());
+            usr2.addSysmatcheduser(usr1.getUsername());
             return true;
         }
         else
@@ -145,7 +145,7 @@ public class UserService {
             //Iterate through user matches and have matched users delete main user from their lists
             for (int i = 0; i > userMatches.size(); i++) {
                 User matchedUser = getUserByUsername(userMatches.get(i)).get();
-                matchedUser.getProfile().delSysMatchUser(mainUser.getUsername());
+                matchedUser.removeSysmatchedUser(mainUser.getUsername());
             }
         }
         //  Go through a filtered user database and attempt to get 100 matches
@@ -160,5 +160,6 @@ public class UserService {
                 break;
         }
         mainUser.getProfile().setSysmatchedUsers(matchedUsers);
+        userDB.updateUserProfile(username, mainUser.getProfile());
     }
 }
