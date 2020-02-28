@@ -109,7 +109,9 @@ public class UserService {
     public boolean matchTwoUsers(User usr1, User usr2, int threshold){
         // Initialize a variable to keep track of matches
         int numMatches = 0;
+        int numMatches2 = 0;
 
+        //retainAll leaves usr1List with only the shared traits
         ArrayList<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
         usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
         ArrayList<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
@@ -123,16 +125,16 @@ public class UserService {
         numMatches += usr1Food.size();
         numMatches += usr1Music.size();
         numMatches += usr1Hobby.size();
+        numMatches2 = usr1Sport.size() + usr1Food.size() + usr1Music.size() + usr1Hobby.size();
 
         if (usr1.getSurveyResults().getPersonalityType() == usr2.getSurveyResults().getPersonalityType())
             numMatches++;
+            numMatches2++;
         if (usr1.getSurveyResults().getLikesAnimals() == usr2.getSurveyResults().getLikesAnimals())
             numMatches++;
+            numMatches2++;
 
-        if (numMatches >= threshold)
-            return true;
-        else
-            return false;
+        return numMatches >= threshold;
     }
 
     public void matchUsers(String username) throws IOException {

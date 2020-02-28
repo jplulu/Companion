@@ -89,6 +89,27 @@ public class UserProfiles implements UsrDB{
 
     public void setSurvey(String username, SurveyResults results) {
         User userUpdate = userDB.get(userID.get(username));
+        SurveyResults newSurveyResults = userUpdate.getSurveyResults();
+
+        if (results.getSportsAnswers() != null)
+            newSurveyResults.setSportsAnswers(results.getSportsAnswers());
+        if (results.getFoodAnswers() != null)
+            newSurveyResults.setFoodAnswers(results.getFoodAnswers());
+        if (results.getMusicAnswers() != null)
+            newSurveyResults.setMusicAnswers(results.getMusicAnswers());
+        if (results.getHobbyAnswers() != null)
+            newSurveyResults.setHobbyAnswers(results.getHobbyAnswers());
+        if (results.getPersonalityType() != 0)
+            newSurveyResults.setPersonalityType(results.getPersonalityType());
+        if (results.getLikesAnimals() != 0)
+            newSurveyResults.setLikesAnimals(results.getLikesAnimals());
+        if (results.getGenderPreference() != 0)
+            newSurveyResults.setGenderPreference(results.getGenderPreference());
+        if (results.getMinAge() != 0)
+            newSurveyResults.setMinAge(results.getMinAge());
+        if (results.getMaxAge() != 0)
+            newSurveyResults.setMaxAge(results.getMaxAge());
+
         userUpdate.setSurveyResults(results);
         userDB.replace(userID.get(username), userUpdate);
     }
