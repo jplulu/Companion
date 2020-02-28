@@ -7,11 +7,12 @@ import com.lustermaniacs.companion.models.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class UserProfiles implements UsrDB{
-    private static HashMap<String, UUID> userID = new HashMap<>();
-    private static HashMap<UUID,User>userDB = new HashMap<>();
+    private static ConcurrentHashMap<String, UUID> userID = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<UUID,User>userDB = new ConcurrentHashMap<>();
 
     @Override
     public int addUser(User user){
@@ -94,6 +95,7 @@ public class UserProfiles implements UsrDB{
     }
 
     public int deleteUser(User user) {
+        // Check if mapping exists for delete in the first place
         if (userID.remove(user.getUsername()) != null) {
             userDB.remove(user.getId());
             return 0;
