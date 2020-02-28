@@ -20,8 +20,10 @@ public class UserProfiles implements UsrDB{
         SurveyResults newResults = new SurveyResults();
         UUID id = UUID.randomUUID();
         User newUser = new User(user.getUsername(), user.getPassword(), id, newProfile, newResults);
-        if (!userID.containsKey(newUser.getUsername())) {
-            userID.put(newUser.getUsername(), id);
+        //  putIfAbsent to ensure atomicity for ID hashmap
+        //  if null returned, success
+        //  otherwise, something already exists there
+        if (userID.putIfAbsent(newUser.getUsername(), id) != null) {
             userDB.put(id, newUser);
             return 0;
         }
@@ -53,9 +55,12 @@ public class UserProfiles implements UsrDB{
     public int updateUserByUsername(String username, User user) {
         UUID uid = userID.get(username);
         User updatedUser = userDB.get(uid);
+        // if username stated for change then change otherwise, it will be read as null and not changed
         if(user.getUsername() != null) {
+            //  Check if new username already exists before allowing to change
+            if (userID.putIfAbsent(user.getUsername(), uid) != null)
+                return 1;
             userID.remove(username);
-            userID.put(user.getUsername(), uid);
             updatedUser.setUsername(user.getUsername());
         }
         if(user.getPassword() != null) {
@@ -65,8 +70,9 @@ public class UserProfiles implements UsrDB{
         return 0;
     }
 
-    public void updateUserProfile(String username, Profile profile) {
+    public int updateUserProfile(String username, Profile profile) {
         User userUpdate = userDB.get(userID.get(username));
+        User olduser = userUpdate;
         Profile newProfile = userUpdate.getProfile();
         if(profile.getFirstName() != null)
             newProfile.setFirstName(profile.getFirstName());
@@ -84,8 +90,12 @@ public class UserProfiles implements UsrDB{
             newProfile.setMaxDistance(profile.getMaxDistance());
         if(profile.getProfilePic() != null)
             newProfile.setProfilePic(profile.getProfilePic());
-       userUpdate.setProfile(newProfile);
-        userDB.replace(userID.get(username), userUpdate);
+        userUpdate.setProfile(newProfile);
+        //  Check to see if the profile changed before replacing it
+        if (userDB.replace(userID.get(username), olduser, userUpdate))
+            return 0;
+        else
+            return 1;
     }
 
     public void setSurvey(String username, SurveyResults results) {
