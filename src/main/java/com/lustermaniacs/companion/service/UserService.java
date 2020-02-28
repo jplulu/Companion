@@ -1,5 +1,6 @@
 package com.lustermaniacs.companion.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,10 +40,6 @@ public class UserService {
         return userDB.getUserByUsername(username);
     }
 
-    public Optional<User> getUserByID(String username) {
-        return userDB.getUserByUsername(username);
-    }
-
     public List<User> getAllSysmatchUser(String username) {
         return userDB.getMatchedUsers(username);
     }
@@ -59,19 +56,87 @@ public class UserService {
         userDB.setSurvey(username, results);
     }
 
-    // Function to filter out users who do not meet target person's criteria from their "matching pool"
-    public List<User> matchingFiltering(String username) throws IOException {
+    public List<User> filterByGender(User curUser) {
         List<User> filteredUsers = new ArrayList<>();
+        List<User> allUsers = userDB.getAllUsers();
+        byte curUserPreference = curUser.getSurveyResults().getGenderPreference();
+        char curUserGender = curUser.getProfile().getGender();
+        if(curUserPreference == 3) {
+            for(User user : allUsers) {
+                if(user.getId() == curUser.getId())
+                    continue;
+                byte userPreference = user.getSurveyResults().getGenderPreference();
+                if(userPreference == 3)
+                    filteredUsers.add(user);
+                else if((userPreference == 1) && (curUserGender == 1))
+                    filteredUsers.add(user);
+                else if((userPreference == 2) && (curUserGender == 2))
+                    filteredUsers.add(user);
+            }
+        }
+        else if(curUserPreference == 1) {
+            for(User user : allUsers) {
+                if(user.getId() == curUser.getId())
+                    continue;
+                if(user.getProfile().getGender() == 1) {
+                    byte userPreference = user.getSurveyResults().getGenderPreference();
+                    if(userPreference == 3)
+                        filteredUsers.add(user);
+                    else if((userPreference == 1) && (curUserGender == 1))
+                        filteredUsers.add(user);
+                    else if((userPreference == 2) && (curUserGender == 2))
+                        filteredUsers.add(user);
+                }
+            }
+        }
+        else if(curUserPreference == 2) {
+            for(User user : allUsers) {
+                if(user.getId() == curUser.getId())
+                    continue;
+                if(user.getProfile().getGender() == 2) {
+                    byte userPreference = user.getSurveyResults().getGenderPreference();
+                    if(userPreference == 3)
+                        filteredUsers.add(user);
+                    else if((userPreference == 1) && (curUserGender == 1))
+                        filteredUsers.add(user);
+                    else if((userPreference == 2) && (curUserGender == 2))
+                        filteredUsers.add(user);
+                }
+            }
+        }
+
+        return filteredUsers;
+    }
+
+    public List<User> filterByAge(User curUser, List<User> filteredUsers) {
+        List<User> newFilteredUsers = new ArrayList<>();
+        int curUserAge = curUser.getProfile().getAge();
+        int curUserMinAge = curUser.getSurveyResults().getMinAge();
+        int curUserMaxAge = curUser.getSurveyResults().getMinAge();
+        for(User user : filteredUsers) {
+            if(user.getId() == curUser.getId())
+                continue;
+            int userAge = user.getProfile().getAge();
+            if(userAge >= curUserMinAge && userAge <= curUserMaxAge) {
+                if(curUserAge >= user.getSurveyResults().getMinAge() && curUserAge <= user.getSurveyResults().getMaxAge())
+                    newFilteredUsers.add(user);
+            }
+        }
+        return newFilteredUsers;
+    }
+
+    public List<User> filterByLocation(User curUser, List<User> filteredUsers) throws IOException {
+        List<User> newFilteredUsers = new ArrayList<>();
+
         String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
         String apiKey = "";
-        User curUser = userDB.getUserByUsername(username).get();
         String origin = curUser.getProfile().getLocation();
         int curMaxDist = curUser.getProfile().getMaxDistance();
-        List<User> allUsers = userDB.getAllUsers();
 
-        for(User user: allUsers) {
+        for(User user : filteredUsers) {
+            if(user.getId() == curUser.getId())
+                continue;
             String dest = user.getProfile().getLocation();
-            int maxDist = Math.min(curMaxDist, user.getProfile().getMaxDistance());
             String url = baseURL + URLEncoder.encode(origin, StandardCharsets.UTF_8) +
                     "&destinations=" + URLEncoder.encode(dest, StandardCharsets.UTF_8) +
                     "&key=" + apiKey;
@@ -94,31 +159,36 @@ public class UserService {
             ArrayNode rows = (ArrayNode) jsonResponse.path("rows");
             ArrayNode element = (ArrayNode) rows.get(0).get("elements");
             int distance = (int) ((element.get(0).path("distance").path("value").asInt()) * 0.00062137119);
-            if(distance <= maxDist) {
-                filteredUsers.add(user);
+            if(distance <= Math.min(curMaxDist, user.getProfile().getMaxDistance())) {
+                newFilteredUsers.add(user);
             }
         }
 
-        //String origin = "New York, NY, USA";
-        // String dest = "Washington, DC, USA";
-
-        return filteredUsers;
+        return newFilteredUsers;
     }
-  
+
+    // Function to filter out users who do not meet target person's criteria from their "matching pool"
+    public List<User> matchingFilter(String username) throws IOException {
+        User curUser = userDB.getUserByUsername(username).get();
+        List<User> filteredUsersByGender = filterByGender(curUser);
+        List<User> filteredUsersByAge = filterByAge(curUser, filteredUsersByGender);
+        return filterByLocation(curUser, filteredUsersByAge);
+    }
+
     // Function to match two given users based on a # of shared interest (threshold)
     public boolean matchTwoUsers(User usr1, User usr2, int threshold){
         // Initialize a variable to keep track of matches
         int numMatches = 0;
         int numMatches2 = 0;
 
+        List<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
         //retainAll leaves usr1List with only the shared traits
-        ArrayList<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
         usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
-        ArrayList<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
+        List<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
         usr1Food.retainAll(usr2.getSurveyResults().getFoodAnswers());
-        ArrayList<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
+        List<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
         usr1Music.retainAll(usr2.getSurveyResults().getMusicAnswers());
-        ArrayList<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
+        List<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
         usr1Hobby.retainAll(usr2.getSurveyResults().getHobbyAnswers());
 
         numMatches += usr1Sport.size();
@@ -139,12 +209,12 @@ public class UserService {
 
     public void matchUsers(String username) throws IOException {
         User mainUser = getUserByUsername(username).get();
-        List<User> filteredDB = matchingFiltering(username);
+        List<User> filteredDB = matchingFilter(username);
         List<UUID> matchedUsers = new ArrayList<>();
-        for(int i = 0; i < filteredDB.size() ; i++) {
+        for (User user : filteredDB) {
             //match main user with all filtered users and create match if threshold of 4 matches reached
-            if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
-                matchedUsers.add(filteredDB.get(i).getId());
+            if (matchTwoUsers(mainUser, user, 4))
+                matchedUsers.add(user.getId());
             //once 100 matches made, stop
             if (matchedUsers.size() > 99)
                 break;
