@@ -110,13 +110,13 @@ public class UserService {
         // Initialize a variable to keep track of matches
         int numMatches = 0;
         //  Compare profile parameters and count how many same results
-        ArrayList<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
+        List<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
         usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
-        ArrayList<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
+        List<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
         usr1Food.retainAll(usr2.getSurveyResults().getFoodAnswers());
-        ArrayList<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
+        List<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
         usr1Music.retainAll(usr2.getSurveyResults().getMusicAnswers());
-        ArrayList<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
+        List<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
         usr1Hobby.retainAll(usr2.getSurveyResults().getHobbyAnswers());
 
         numMatches += usr1Sport.size();
