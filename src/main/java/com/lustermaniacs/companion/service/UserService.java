@@ -231,5 +231,6 @@ public class UserService {
                 break;
         }
         mainUser.getProfile().setSysmatchedUsers(matchedUsers);
+        updateUserProfile(username, mainUser.getProfile());
     }
 }
