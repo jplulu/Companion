@@ -51,6 +51,10 @@ public class UserService {
         userDB.updateUserByUsername(username, newUser);
     }
 
+    public void updateUserProfile(String username, Profile profile) {
+        userDB.updateUserProfile(username, profile);
+    }
+
     public void setSurvey(String username, SurveyResults results){
         userDB.setSurvey(username, results);
     }
