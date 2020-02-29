@@ -69,9 +69,9 @@ public class UserService {
                 byte userPreference = user.getSurveyResults().getGenderPreference();
                 if(userPreference == 3)
                     filteredUsers.add(user);
-                else if((userPreference == 1) && (curUserGender == 1))
+                else if((userPreference == 1) && (curUserGender == '1'))
                     filteredUsers.add(user);
-                else if((userPreference == 2) && (curUserGender == 2))
+                else if((userPreference == 2) && (curUserGender == '2'))
                     filteredUsers.add(user);
             }
         }
@@ -79,13 +79,13 @@ public class UserService {
             for(User user : allUsers) {
                 if(user.getId() == curUser.getId())
                     continue;
-                if(user.getProfile().getGender() == 1) {
+                if(user.getProfile().getGender() == '1') {
                     byte userPreference = user.getSurveyResults().getGenderPreference();
                     if(userPreference == 3)
                         filteredUsers.add(user);
-                    else if((userPreference == 1) && (curUserGender == 1))
+                    else if((userPreference == 1) && (curUserGender == '1'))
                         filteredUsers.add(user);
-                    else if((userPreference == 2) && (curUserGender == 2))
+                    else if((userPreference == 2) && (curUserGender == '2'))
                         filteredUsers.add(user);
                 }
             }
@@ -94,18 +94,17 @@ public class UserService {
             for(User user : allUsers) {
                 if(user.getId() == curUser.getId())
                     continue;
-                if(user.getProfile().getGender() == 2) {
+                if(user.getProfile().getGender() == '2') {
                     byte userPreference = user.getSurveyResults().getGenderPreference();
-                    if(userPreference == 3)
+                        if(userPreference == 3)
+                            filteredUsers.add(user);
+                    else if((userPreference == 1) && (curUserGender == '1'))
                         filteredUsers.add(user);
-                    else if((userPreference == 1) && (curUserGender == 1))
-                        filteredUsers.add(user);
-                    else if((userPreference == 2) && (curUserGender == 2))
+                    else if((userPreference == 2) && (curUserGender == '2'))
                         filteredUsers.add(user);
                 }
             }
         }
-
         return filteredUsers;
     }
 
@@ -113,7 +112,7 @@ public class UserService {
         List<User> newFilteredUsers = new ArrayList<>();
         int curUserAge = curUser.getProfile().getAge();
         int curUserMinAge = curUser.getSurveyResults().getMinAge();
-        int curUserMaxAge = curUser.getSurveyResults().getMinAge();
+        int curUserMaxAge = curUser.getSurveyResults().getMaxAge();
         for(User user : filteredUsers) {
             if(user.getId() == curUser.getId())
                 continue;
@@ -130,7 +129,7 @@ public class UserService {
         List<User> newFilteredUsers = new ArrayList<>();
 
         String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
-        String apiKey = "";
+        String apiKey = "AIzaSyAZ-dpSMRPBPF_wQwHUy0AziKmT2KRcpOs";
         String origin = curUser.getProfile().getLocation();
         int curMaxDist = curUser.getProfile().getMaxDistance();
 
@@ -164,7 +163,8 @@ public class UserService {
                 newFilteredUsers.add(user);
             }
         }
-
+        for(User user : newFilteredUsers)
+            System.out.println(user.getId());
         return newFilteredUsers;
     }
 
@@ -211,21 +211,21 @@ public class UserService {
     public void matchUsers(String username) throws IOException {
         User mainUser = getUserByUsername(username).get();
         // Check if already matched and remove from other peoples
-        if (mainUser.getProfile().getSysmatchedUsers().isEmpty()) {
+        if (mainUser.getProfile().getSysmatchedUsers() != null) {
             List<String> userMatches = mainUser.getProfile().getSysmatchedUsers();
             //Iterate through user matches and have matched users delete main user from their lists
-            for (int i = 0; i > userMatches.size(); i++) {
-                User matchedUser = getUserByUsername(userMatches.get(i)).get();
+            for (String userMatch : userMatches) {
+                User matchedUser = getUserByUsername(userMatch).get();
                 matchedUser.removeSysmatchedUser(mainUser.getUsername());
             }
         }
         //  Go through a filtered user database and attempt to get 100 matches
-        List<User> filteredDB = matchingFiltering(username);
+        List<User> filteredDB = matchingFilter(username);
         List<String> matchedUsers = new ArrayList<>();
-        for(int i = 0; i < filteredDB.size() ; i++) {
+        for (User user : filteredDB) {
             //match main user with all filtered users and create match if threshold of 4 matches reached
-            if (matchTwoUsers(mainUser, filteredDB.get(i), 4))
-                matchedUsers.add(filteredDB.get(i).getUsername());
+            if (matchTwoUsers(mainUser, user, 4))
+                matchedUsers.add(user.getUsername());
             //once 100 matches made, stop
             if (matchedUsers.size() > 99)
                 break;

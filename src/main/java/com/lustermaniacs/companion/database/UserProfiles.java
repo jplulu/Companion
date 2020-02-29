@@ -23,7 +23,7 @@ public class UserProfiles implements UsrDB{
         //  putIfAbsent to ensure atomicity for ID hashmap
         //  if null returned, success
         //  otherwise, something already exists there
-        if (userID.putIfAbsent(newUser.getUsername(), id) != null) {
+        if (userID.putIfAbsent(newUser.getUsername(), id) == null) {
             userDB.put(id, newUser);
             return 0;
         }
@@ -72,7 +72,7 @@ public class UserProfiles implements UsrDB{
 
     public int updateUserProfile(String username, Profile profile) {
         User userUpdate = userDB.get(userID.get(username));
-        User olduser = userUpdate;
+        User oldUser = userUpdate;
         Profile newProfile = userUpdate.getProfile();
         if(profile.getFirstName() != null)
             newProfile.setFirstName(profile.getFirstName());
@@ -92,7 +92,7 @@ public class UserProfiles implements UsrDB{
             newProfile.setProfilePic(profile.getProfilePic());
         userUpdate.setProfile(newProfile);
         //  Check to see if the profile changed before replacing it
-        if (userDB.replace(userID.get(username), olduser, userUpdate))
+        if (userDB.replace(userID.get(username), oldUser, userUpdate))
             return 0;
         else
             return 1;
