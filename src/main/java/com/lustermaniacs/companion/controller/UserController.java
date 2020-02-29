@@ -35,7 +35,7 @@ public class UserController {
             return userService.getUserByUsername(username);
         else {
             System.out.println("User does not exists");
-            return null;
+            return Optional.empty();
         }
 
 //        return userService.getUserByUsername(username)
@@ -58,11 +58,11 @@ public class UserController {
         int errCode = userService.updateUserProfile(username, profile);
         switch(errCode) {
             case 0:
+                //System.out.println("Worked");
                 break;
             case 1:
-                System.out.println("Profile was updated ");
+                //System.out.println("Profile was modified between changes ");
         }
-
     }
 
     @PutMapping("/{username}/survey")
