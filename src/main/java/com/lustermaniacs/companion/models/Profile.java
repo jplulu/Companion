@@ -16,7 +16,6 @@ public class Profile {
     private String location;
     private int maxDistance;
     private String bio;
-    private List<String> sysmatchedUsers;
 
     // Constructor
     public Profile(@JsonProperty("firstName") String firstName,
@@ -26,8 +25,7 @@ public class Profile {
                    @JsonProperty("profilePic") List<String> profilePic,
                    @JsonProperty("location") String location,
                    @JsonProperty("maxDistance") int maxDistance,
-                   @JsonProperty("bio") String bio,
-                   @JsonProperty("sysmatchedUsers") List<String> sysmatchedUsers) {
+                   @JsonProperty("bio") String bio) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -36,7 +34,6 @@ public class Profile {
         this.location = location;
         this.maxDistance = maxDistance;
         this.bio = bio;
-        this.sysmatchedUsers = sysmatchedUsers;
     }
 
     public Profile() {
@@ -105,23 +102,5 @@ public class Profile {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public List<String> getSysmatchedUsers() {
-        return sysmatchedUsers;
-    }
-
-    public void setSysmatchedUsers(List<String> sysmatchedUsers) {
-        this.sysmatchedUsers = sysmatchedUsers;
-    }
-
-    // Method to add a user to someone's sysmatched list, which is stored as list of usernames
-    public void addSysmatchedUser(String userName){
-        this.sysmatchedUsers.add(userName);
-    }
-
-    // Method to remove a user from someone's sysmatched list
-    public void removeSysmatchedUser(String userName){
-        this.sysmatchedUsers.remove(userName);
     }
 }
