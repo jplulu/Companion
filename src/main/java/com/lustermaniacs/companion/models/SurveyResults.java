@@ -6,15 +6,24 @@ import java.util.List;
 
 public class SurveyResults{
     //Instance Fields
-    List<String> sportsAnswers;
-    List<String> foodAnswers;
-    List<String> musicAnswers;
-    List<String> hobbyAnswers;
-    byte personalityType;
-    byte likesAnimals;
-    byte genderPreference;
-    int maxAge;
-    int minAge;
+    private List<String> sportsAnswers;
+    private List<String> foodAnswers;
+    private List<String> musicAnswers;
+    private List<String> hobbyAnswers;
+    private byte personalityType;
+    private byte likesAnimals;
+    private byte genderPreference;
+    private int maxAge;
+    private int minAge;
+    private int maxDistance;
+
+    public int getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(int maxDistance) {
+        this.maxDistance = maxDistance;
+    }
 
     public SurveyResults() {
 
@@ -28,7 +37,8 @@ public class SurveyResults{
                          @JsonProperty("likesAnimals") byte likesAnimals,
                          @JsonProperty("genderPreference") byte genderPreference,
                          @JsonProperty("maxAge") int maxAge,
-                         @JsonProperty("minAge") int minAge) {
+                         @JsonProperty("minAge") int minAge,
+                         @JsonProperty int maxDistance) {
         this.sportsAnswers = sportsAnswers;
         this.foodAnswers = foodAnswers;
         this.musicAnswers = musicAnswers;
@@ -38,6 +48,7 @@ public class SurveyResults{
         this.genderPreference = genderPreference;
         this.maxAge = maxAge;
         this.minAge = minAge;
+        this.maxDistance = maxDistance;
     }
 
     public List<String> getSportsAnswers() {

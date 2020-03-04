@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.lustermaniacs.companion.database.MatchedUsersDB;
 import com.lustermaniacs.companion.database.UsrDB;
+import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +32,15 @@ public class MatchingService {
         this.userDB = userDB;
     }
 
-    public List<User> getAllSysmatchUser(String username) {
-        List<User> matchedUsers = new ArrayList<>();
+    public List<Profile> getAllSysmatchUser(String username) {
+        if(!matchedUsersDB.contains(username))
+            return null;
+        List<Profile> matchedUsers = new ArrayList<>();
         List<String> matchedUsernames = matchedUsersDB.getAllMatchedUsers(username);
         for(String matchedUsername : matchedUsernames) {
             Optional<User> curUser = userDB.getUserByUsername(matchedUsername);
             if(curUser.isPresent())
-                matchedUsers.add(curUser.get());
+                matchedUsers.add(curUser.get().getProfile());
             else
                 matchedUsersDB.removeMatchedUser(username, matchedUsername);
         }
@@ -188,7 +191,7 @@ public class MatchingService {
         String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
         String apiKey = "AIzaSyAZ-dpSMRPBPF_wQwHUy0AziKmT2KRcpOs";
         String origin = curUser.getProfile().getLocation();
-        int curMaxDist = curUser.getProfile().getMaxDistance();
+        int curMaxDist = curUser.getSurveyResults().getMaxDistance();
 
         for(User user : filteredUsers) {
             if(user.getId() == curUser.getId())
@@ -216,7 +219,7 @@ public class MatchingService {
             ArrayNode rows = (ArrayNode) jsonResponse.path("rows");
             ArrayNode element = (ArrayNode) rows.get(0).get("elements");
             int distance = (int) ((element.get(0).path("distance").path("value").asInt()) * 0.00062137119);
-            if(distance <= Math.min(curMaxDist, user.getProfile().getMaxDistance())) {
+            if(distance <= Math.min(curMaxDist, user.getSurveyResults().getMaxDistance())) {
                 newFilteredUsers.add(user);
             }
         }

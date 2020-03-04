@@ -77,8 +77,6 @@ public class UserProfiles implements UsrDB {
             newProfile.setAge(profile.getAge());
         if(profile.getLocation() != null)
             newProfile.setLocation(profile.getLocation());
-        if(profile.getMaxDistance() != 0)
-            newProfile.setMaxDistance(profile.getMaxDistance());
         if(profile.getProfilePic() != null)
             newProfile.setProfilePic(profile.getProfilePic());
         userUpdate.setProfile(newProfile);

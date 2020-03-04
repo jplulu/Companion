@@ -1,6 +1,5 @@
 package com.lustermaniacs.companion.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
@@ -55,7 +54,8 @@ public class UserController {
     }
 
     @GetMapping("/{username}/matches")
-    public List<User> getAllSysmatchUser(@PathVariable("username") String username) {
+    public List<Profile> getAllSysmatchUser(@PathVariable("username") String username) {
+
         return matchingService.getAllSysmatchUser(username);
     }
 
