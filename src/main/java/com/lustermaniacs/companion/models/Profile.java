@@ -14,7 +14,6 @@ public class Profile {
     private char gender;
     private List<String> profilePic;
     private String location;
-    private int maxDistance;
     private String bio;
 
     // Constructor
@@ -24,7 +23,6 @@ public class Profile {
                    @JsonProperty("gender") char gender,
                    @JsonProperty("profilePic") List<String> profilePic,
                    @JsonProperty("location") String location,
-                   @JsonProperty("maxDistance") int maxDistance,
                    @JsonProperty("bio") String bio) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,7 +30,6 @@ public class Profile {
         this.gender = gender;
         this.profilePic = profilePic;
         this.location = location;
-        this.maxDistance = maxDistance;
         this.bio = bio;
     }
 
@@ -86,14 +83,6 @@ public class Profile {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public int getMaxDistance() {
-        return maxDistance;
-    }
-
-    public void setMaxDistance(int maxDistance) {
-        this.maxDistance = maxDistance;
     }
 
     public String getBio() {
