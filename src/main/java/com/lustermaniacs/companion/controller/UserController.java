@@ -3,8 +3,11 @@ package com.lustermaniacs.companion.controller;
 import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
+import com.lustermaniacs.companion.service.MatchingService;
 import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -16,17 +19,21 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final MatchingService matchingService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MatchingService matchingService) {
         this.userService = userService;
+        this.matchingService = matchingService;
     }
 
     @PostMapping("/register")
-    public void addUser(@RequestBody User user) {
+    public ResponseEntity<String> addUser(@RequestBody User user) {
         if(userService.addUser(user) == 1) {
-            System.out.println("Username already exists");
+            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
         }
+        else
+            return new ResponseEntity<>("Sign up successful", HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
@@ -42,9 +49,9 @@ public class UserController {
 //                .orElse(null);
     }
 
-    @GetMapping("/{username}/sysmatchedusers")
+    @GetMapping("/{username}/matches")
     public List<User> getAllSysmatchUser(@PathVariable("username") String username) {
-        return userService.getAllSysmatchUser(username);
+        return matchingService.getAllSysmatchUser(username);
     }
 
     @PutMapping("/{username}")
@@ -68,6 +75,6 @@ public class UserController {
     @PutMapping("/{username}/survey")
     public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
         userService.setSurvey(username, results);
+        matchingService.matchUsers(username);
     }
-
 }

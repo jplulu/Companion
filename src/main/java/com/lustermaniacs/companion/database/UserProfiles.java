@@ -41,17 +41,6 @@ public class UserProfiles implements UsrDB{
     }
 
     @Override
-    public List<User> getMatchedUsers(String username) {
-        List<User> sysmatchuser = new ArrayList<>();
-        User usr = userDB.get(userID.get(username));
-        List<String> matchlist = usr.getProfile().getSysmatchedUsers();
-        for (String user : matchlist) {
-            sysmatchuser.add(userDB.get(userID.get(user)));
-        }
-        return sysmatchuser;
-    }
-
-    @Override
     public int updateUserByUsername(String username, User user) {
         UUID uid = userID.get(username);
         User updatedUser = userDB.get(uid);
