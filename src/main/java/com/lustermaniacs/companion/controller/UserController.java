@@ -54,9 +54,20 @@ public class UserController {
     }
 
     @GetMapping("/{username}/matches")
-    public List<Profile> getAllSysmatchUser(@PathVariable("username") String username) {
-
-        return matchingService.getAllSysmatchUser(username);
+    public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) {
+        List<Profile> matchedUsers = matchingService.getAllSysmatchUser(username);
+        JSONObject resp = new JSONObject();
+        if(matchedUsers == null) {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
+        else if(matchedUsers.isEmpty()) {
+            resp.put("msg", "No matched users found");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
+        }
     }
 
     @PutMapping("/{username}")
