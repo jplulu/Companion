@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class UserProfiles implements UsrDB{
+public class UserProfiles implements UsrDB {
     private static ConcurrentHashMap<String, UUID> userID = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<UUID,User>userDB = new ConcurrentHashMap<>();
 
@@ -37,6 +37,8 @@ public class UserProfiles implements UsrDB{
 
     public Optional<User> getUserByUsername(String username){
         UUID uid = userID.get(username);
+        if(uid == null)
+            return Optional.empty();
         return Optional.of(userDB.get(uid));
     }
 

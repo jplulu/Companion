@@ -1,10 +1,12 @@
 package com.lustermaniacs.companion.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.MatchingService;
 import com.lustermaniacs.companion.service.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +39,15 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public Optional<User> getUserByUserName(@PathVariable("username") String username) {
-        if (userService.getUserByUsername(username).isPresent())
-            return userService.getUserByUsername(username);
+    public ResponseEntity<?> getUserByUserName(@PathVariable("username") String username) {
+        Optional<User> user = userService.getUserByUsername(username);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
         else {
-            System.out.println("User does not exists");
-            return Optional.empty();
+            JSONObject error = new JSONObject();
+            error.put("msg", "User does not exist");
+            return new ResponseEntity<>(error.toString(), HttpStatus.NOT_FOUND);
         }
 
 //        return userService.getUserByUsername(username)
