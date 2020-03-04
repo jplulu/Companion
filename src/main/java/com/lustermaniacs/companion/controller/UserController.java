@@ -72,9 +72,19 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public void updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
-        if (userService.updateUserByUsername(username, user) == 1)
-            System.out.println("Username already exists, changes not made.");
+    public ResponseEntity<String> updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
+        JSONObject resp = new JSONObject();
+        switch (userService.updateUserByUsername(username, user)) {
+            default:
+                resp.put("msg","User was successfully updated.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+            case 1:
+                resp.put("msg","A user with the given name does not exists.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+            case 2:
+                resp.put("msg","Username already exists.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.IM_USED);
+        }
     }
 
     @PutMapping("/{username}/profile")

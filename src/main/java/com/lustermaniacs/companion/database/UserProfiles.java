@@ -6,6 +6,7 @@ import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,20 +45,32 @@ public class UserProfiles implements UsrDB {
 
     @Override
     public int updateUserByUsername(String username, User user) {
-        UUID uid = userID.get(username);
-        User updatedUser = userDB.get(uid);
+        // Return Code
+        // 0 -- The user was successfully updated
+        // 1 -- A user with the given username does not exist.
+        // 2 -- This username already exists
+        User updatedUser = null;
+        if (!getUserByUsername(username).isEmpty()) {
+            updatedUser = getUserByUsername(username).get();
+        }
+        else
+            return 1;
         // if username stated for change then change otherwise, it will be read as null and not changed
         if(user.getUsername() != null) {
-            //  Check if new username already exists before allowing to change
-            if (userID.putIfAbsent(user.getUsername(), uid) != null)
-                return 1;
-            userID.remove(username);
-            updatedUser.setUsername(user.getUsername());
+            //  If name being updated is same name, then just dont do anything
+            //  Check if usernames are the same
+            if(updatedUser.getUsername().equals(username)) {
+                if (userID.putIfAbsent(user.getUsername(), updatedUser.getId()) != null) {
+                    return 2;
+                }
+                userID.remove(username);
+                updatedUser.setUsername(user.getUsername());
+            }
         }
         if(user.getPassword() != null) {
             updatedUser.setPassword(user.getPassword());
         }
-        userDB.replace(uid, updatedUser);
+        userDB.replace(updatedUser.getId(), updatedUser);
         return 0;
     }
 
