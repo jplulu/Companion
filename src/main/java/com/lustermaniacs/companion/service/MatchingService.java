@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MatchingService {
@@ -34,7 +35,11 @@ public class MatchingService {
         List<User> matchedUsers = new ArrayList<>();
         List<String> matchedUsernames = matchedUsersDB.getAllMatchedUsers(username);
         for(String matchedUsername : matchedUsernames) {
-            matchedUsers.add(userDB.getUserByUsername(matchedUsername).get());
+            Optional<User> curUser = userDB.getUserByUsername(matchedUsername);
+            if(curUser.isPresent())
+                matchedUsers.add(curUser.get());
+            else
+                matchedUsersDB.removeMatchedUser(username, matchedUsername);
         }
         return matchedUsers;
     }
@@ -47,8 +52,13 @@ public class MatchingService {
     }
 
 
-    public void matchUsers(String username) throws IOException {
-        User mainUser = userDB.getUserByUsername(username).get();
+    public int matchUsers(String username) throws IOException {
+        Optional<User> testUser = userDB.getUserByUsername(username);
+        User mainUser;
+        if(testUser.isPresent())
+            mainUser = testUser.get();
+        else
+            return 1;
         // Check if already matched and remove from other peoples
         if (!matchedUsersDB.getAllMatchedUsers(username).isEmpty()) {
             List<String> userMatches = matchedUsersDB.getAllMatchedUsers(username);
@@ -69,6 +79,7 @@ public class MatchingService {
                 break;
         }
         matchedUsersDB.replaceMatchedUsers(username, matchedUsers);
+        return 0;
     }
 
     // Function to match two given users based on a # of shared interest (threshold)
