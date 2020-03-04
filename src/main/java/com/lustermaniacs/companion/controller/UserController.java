@@ -30,11 +30,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user) {
+        JSONObject resp = new JSONObject();
         if(userService.addUser(user) == 1) {
-            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+            resp.put("msg","Username already exists.");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.CONFLICT);
         }
-        else
-            return new ResponseEntity<>("Sign up successful", HttpStatus.OK);
+        else {
+            resp.put("msg", "User added successfully.");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{username}")
@@ -44,9 +48,9 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else {
-            JSONObject error = new JSONObject();
-            error.put("msg", "User does not exist");
-            return new ResponseEntity<>(error.toString(), HttpStatus.NOT_FOUND);
+            JSONObject resp = new JSONObject();
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
         }
 
 //        return userService.getUserByUsername(username)
@@ -60,9 +64,19 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public void updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
-        if (userService.updateUserByUsername(username, user) == 1)
-            System.out.println("Username already exists, changes not made.");
+    public ResponseEntity<String> updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
+        JSONObject resp = new JSONObject();
+        switch (userService.updateUserByUsername(username, user)) {
+            default:
+                resp.put("msg","User was successfully updated.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+            case 1:
+                resp.put("msg","A user with the given name does not exists.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+            case 2:
+                resp.put("msg","Username already exists.");
+                return new ResponseEntity<>(resp.toString(), HttpStatus.IM_USED);
+        }
     }
 
     @PutMapping("/{username}/profile")
