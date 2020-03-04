@@ -43,7 +43,7 @@ public class UserService {
         return userDB.updateUserProfile(username, profile);
     }
 
-    public void setSurvey(String username, SurveyResults results) throws IOException {
-        userDB.setSurvey(username, results);
+    public int setSurvey(String username, SurveyResults results) {
+        return userDB.setSurvey(username, results);
     }
 }

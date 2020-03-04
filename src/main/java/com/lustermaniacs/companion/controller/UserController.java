@@ -32,11 +32,11 @@ public class UserController {
     public ResponseEntity<String> addUser(@RequestBody User user) {
         JSONObject resp = new JSONObject();
         if(userService.addUser(user) == 1) {
-            resp.put("msg","Username already exists.");
+            resp.put("msg", "Username already exists!");
             return new ResponseEntity<>(resp.toString(), HttpStatus.CONFLICT);
         }
         else {
-            resp.put("msg", "User added successfully.");
+            resp.put("msg", "Sign up successful");
             return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
         }
     }
@@ -52,15 +52,23 @@ public class UserController {
             resp.put("msg", "User does not exist");
             return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
         }
-
-//        return userService.getUserByUsername(username)
-//                .orElse(null);
     }
 
     @GetMapping("/{username}/matches")
-    public List<Profile> getAllSysmatchUser(@PathVariable("username") String username) {
-
-        return matchingService.getAllSysmatchUser(username);
+    public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) {
+        List<Profile> matchedUsers = matchingService.getAllSysmatchUser(username);
+        JSONObject resp = new JSONObject();
+        if(matchedUsers == null) {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
+        else if(matchedUsers.isEmpty()) {
+            resp.put("msg", "No matched users found");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
+        }
     }
 
     @PutMapping("/{username}")
@@ -80,20 +88,30 @@ public class UserController {
     }
 
     @PutMapping("/{username}/profile")
-    public void updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
+    public ResponseEntity<?> updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
         int errCode = userService.updateUserProfile(username, profile);
-        switch(errCode) {
-            case 0:
-                //System.out.println("Worked");
-                break;
-            case 1:
-                //System.out.println("Profile was modified between changes ");
+        JSONObject resp = new JSONObject();
+        if(errCode == 0) {
+            resp.put("msg", "Update successful");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
         }
+        else {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PutMapping("/{username}/survey")
-    public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
-        userService.setSurvey(username, results);
+    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
+        int errCode = userService.setSurvey(username, results);
+        JSONObject resp = new JSONObject();
+        if(errCode == 1) {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
         matchingService.matchUsers(username);
+        resp.put("msg", "You have been matched");
+        return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
     }
 }
