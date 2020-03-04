@@ -64,7 +64,6 @@ public class UserProfiles implements UsrDB {
                     return 2;
                 }
                 userID.remove(username);
-                System.out.println("notequal");
                 updatedUser.setUsername(user.getUsername());
             }
         }
