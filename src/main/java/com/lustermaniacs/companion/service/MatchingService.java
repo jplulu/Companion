@@ -57,11 +57,9 @@ public class MatchingService {
 
     public int matchUsers(String username) throws IOException {
         Optional<User> testUser = userDB.getUserByUsername(username);
-        User mainUser;
-        if(testUser.isPresent())
-            mainUser = testUser.get();
-        else
+        if(testUser.isEmpty())
             return 1;
+        User mainUser = testUser.get();
         // Check if already matched and remove from other peoples
         if (!matchedUsersDB.getAllMatchedUsers(username).isEmpty()) {
             List<String> userMatches = matchedUsersDB.getAllMatchedUsers(username);

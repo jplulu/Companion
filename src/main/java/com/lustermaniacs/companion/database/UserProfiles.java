@@ -62,8 +62,10 @@ public class UserProfiles implements UsrDB {
     }
 
     public int updateUserProfile(String username, Profile profile) {
-        User userUpdate = userDB.get(userID.get(username));
-        User oldUser = userUpdate;
+        Optional<User> testUser = getUserByUsername(username);
+        if(testUser.isEmpty())
+            return 1;
+        User userUpdate = testUser.get();
         Profile newProfile = userUpdate.getProfile();
         if(profile.getFirstName() != null)
             newProfile.setFirstName(profile.getFirstName());
@@ -81,16 +83,17 @@ public class UserProfiles implements UsrDB {
             newProfile.setProfilePic(profile.getProfilePic());
         userUpdate.setProfile(newProfile);
         //  Check to see if the profile changed before replacing it
-        if (userDB.replace(userID.get(username), oldUser, userUpdate))
-            return 0;
-        else
-            return 1;
+        userDB.replace(userID.get(username), userUpdate);
+        return 0;
     }
 
-    public void setSurvey(String username, SurveyResults results) {
-        User userUpdate = userDB.get(userID.get(username));
-        SurveyResults newSurveyResults = userUpdate.getSurveyResults();
+    public int setSurvey(String username, SurveyResults results) {
+        Optional<User> testUser = getUserByUsername(username);
+        if(testUser.isEmpty())
+            return 1;
+        User userUpdate = testUser.get();
 
+        SurveyResults newSurveyResults = userUpdate.getSurveyResults();
         if (results.getSportsAnswers() != null)
             newSurveyResults.setSportsAnswers(results.getSportsAnswers());
         if (results.getFoodAnswers() != null)
@@ -112,15 +115,16 @@ public class UserProfiles implements UsrDB {
 
         userUpdate.setSurveyResults(results);
         userDB.replace(userID.get(username), userUpdate);
+        return 0;
     }
 
-    public int deleteUser(User user) {
-        // Check if mapping exists for delete in the first place
-        if (userID.remove(user.getUsername()) != null) {
-            userDB.remove(user.getId());
-            return 0;
-        }
-        else return 1;
-    }
+//    public int deleteUser(User user) {
+//        // Check if mapping exists for delete in the first place
+//        if (userID.remove(user.getUsername()) != null) {
+//            userDB.remove(user.getId());
+//            return 0;
+//        }
+//        else return 1;
+//    }
 
 }

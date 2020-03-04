@@ -10,8 +10,7 @@ public interface UsrDB{
     int addUser(User user);
     int updateUserByUsername(String username, User user);
     int updateUserProfile(String username, Profile profile);
-//    List<User> getMatchedUsers(String username);
     Optional<User> getUserByUsername(String username);
     List<User> getAllUsers();
-    void setSurvey(String username, SurveyResults results);
+    int setSurvey(String username, SurveyResults results);
 }

@@ -30,11 +30,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user) {
+        JSONObject resp = new JSONObject();
         if(userService.addUser(user) == 1) {
-            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+            resp.put("msg", "Username already exists!");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.CONFLICT);
         }
-        else
-            return new ResponseEntity<>("Sign up successful", HttpStatus.OK);
+        else {
+            resp.put("msg", "Sign up successful");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{username}")
@@ -44,13 +48,10 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else {
-            JSONObject error = new JSONObject();
-            error.put("msg", "User does not exist");
-            return new ResponseEntity<>(error.toString(), HttpStatus.NOT_FOUND);
+            JSONObject resp = new JSONObject();
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
         }
-
-//        return userService.getUserByUsername(username)
-//                .orElse(null);
     }
 
     @GetMapping("/{username}/matches")
@@ -77,20 +78,30 @@ public class UserController {
     }
 
     @PutMapping("/{username}/profile")
-    public void updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
+    public ResponseEntity<?> updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
         int errCode = userService.updateUserProfile(username, profile);
-        switch(errCode) {
-            case 0:
-                //System.out.println("Worked");
-                break;
-            case 1:
-                //System.out.println("Profile was modified between changes ");
+        JSONObject resp = new JSONObject();
+        if(errCode == 0) {
+            resp.put("msg", "Update successful");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
         }
+        else {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PutMapping("/{username}/survey")
-    public void setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
-        userService.setSurvey(username, results);
+    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws IOException {
+        int errCode = userService.setSurvey(username, results);
+        JSONObject resp = new JSONObject();
+        if(errCode == 1) {
+            resp.put("msg", "User does not exist");
+            return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
+        }
         matchingService.matchUsers(username);
+        resp.put("msg", "You have been matched");
+        return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
     }
 }
