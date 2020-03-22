@@ -1,35 +1,34 @@
 package com.lustermaniacs.companion.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Profile {
 
     // Instance Fields
     private String firstName;
     private String lastName;
-    private Byte age;
+    private int age;
     private char gender;
     private List<String> profilePic;
     private String location;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private double longitude;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private double latitude;
     private String bio;
 
-    // Constructor
-    public Profile(@JsonProperty("firstName") String firstName,
-                   @JsonProperty("lastName") String lastName,
-                   @JsonProperty("age") Byte age,
-                   @JsonProperty("gender") char gender,
-                   @JsonProperty("profilePic") List<String> profilePic,
-                   @JsonProperty("location") String location,
-                   @JsonProperty("bio") String bio) {
+    public Profile(String firstName, String lastName, int age, char gender, List<String> profilePic, String location, double longitude, double latitude, String bio) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.gender = gender;
         this.profilePic = profilePic;
         this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.bio = bio;
     }
 
@@ -53,11 +52,11 @@ public class Profile {
         this.lastName = lastName;
     }
 
-    public Byte getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Byte age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -91,5 +90,21 @@ public class Profile {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

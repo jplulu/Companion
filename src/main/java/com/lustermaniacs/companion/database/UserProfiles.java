@@ -6,7 +6,6 @@ import com.lustermaniacs.companion.models.SurveyResults;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,8 +48,8 @@ public class UserProfiles implements UsrDB {
         // 0 -- The user was successfully updated
         // 1 -- A user with the given username does not exist.
         // 2 -- This username already exists
-        User updatedUser = null;
-        if (!getUserByUsername(username).isEmpty()) {
+        User updatedUser;
+        if (getUserByUsername(username).isPresent()) {
             updatedUser = getUserByUsername(username).get();
         }
         else
@@ -74,7 +73,7 @@ public class UserProfiles implements UsrDB {
         return 0;
     }
 
-    public int updateUserProfile(String username, Profile profile) {
+    public int setUserProfile(String username, Profile profile) {
         Optional<User> testUser = getUserByUsername(username);
         if(testUser.isEmpty())
             return 1;
@@ -88,10 +87,14 @@ public class UserProfiles implements UsrDB {
             newProfile.setGender(profile.getGender());
         if(profile.getBio() != null)
             newProfile.setBio(profile.getBio());
-        if(profile.getAge() != null)
+        if(profile.getAge() != 0)
             newProfile.setAge(profile.getAge());
         if(profile.getLocation() != null)
             newProfile.setLocation(profile.getLocation());
+        if(profile.getLatitude() != 0)
+            newProfile.setLatitude(profile.getLatitude());
+        if(profile.getLongitude() != 0)
+            newProfile.setLongitude(profile.getLongitude());
         if(profile.getProfilePic() != null)
             newProfile.setProfilePic(profile.getProfilePic());
         userUpdate.setProfile(newProfile);

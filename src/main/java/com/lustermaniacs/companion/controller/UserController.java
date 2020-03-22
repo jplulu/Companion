@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<String> updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
+    public ResponseEntity<?> updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) {
         JSONObject resp = new JSONObject();
         switch (userService.updateUserByUsername(username, user)) {
             default:
@@ -88,8 +88,8 @@ public class UserController {
     }
 
     @PutMapping("/{username}/profile")
-    public ResponseEntity<?> updateUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) {
-        int errCode = userService.updateUserProfile(username, profile);
+    public ResponseEntity<?> setUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) throws IOException {
+        int errCode = userService.setUserProfile(username, profile);
         JSONObject resp = new JSONObject();
         if(errCode == 0) {
             resp.put("msg", "Update successful");
@@ -99,7 +99,6 @@ public class UserController {
             resp.put("msg", "User does not exist");
             return new ResponseEntity<>(resp.toString(), HttpStatus.NOT_FOUND);
         }
-
     }
 
     @PutMapping("/{username}/survey")

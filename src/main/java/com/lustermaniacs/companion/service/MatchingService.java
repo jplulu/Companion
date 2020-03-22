@@ -185,38 +185,13 @@ public class MatchingService {
 
     private List<User> filterByLocation(User curUser, List<User> filteredUsers) throws IOException {
         List<User> newFilteredUsers = new ArrayList<>();
-
-        String baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
-        String apiKey = "AIzaSyAZ-dpSMRPBPF_wQwHUy0AziKmT2KRcpOs";
-        String origin = curUser.getProfile().getLocation();
         int curMaxDist = curUser.getSurveyResults().getMaxDistance();
 
         for(User user : filteredUsers) {
             if(user.getId() == curUser.getId())
                 continue;
-            String dest = user.getProfile().getLocation();
-            String url = baseURL + URLEncoder.encode(origin, StandardCharsets.UTF_8) +
-                    "&destinations=" + URLEncoder.encode(dest, StandardCharsets.UTF_8) +
-                    "&key=" + apiKey;
-            URL obj = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonResponse = mapper.readTree(response.toString());
-            ArrayNode rows = (ArrayNode) jsonResponse.path("rows");
-            ArrayNode element = (ArrayNode) rows.get(0).get("elements");
-            int distance = (int) ((element.get(0).path("distance").path("value").asInt()) * 0.00062137119);
+            int distance = (int) distance(curUser.getProfile().getLatitude(), curUser.getProfile().getLongitude(), user.getProfile().getLatitude(), user.getProfile().getLongitude());
+            System.out.println(distance);
             if(distance <= Math.min(curMaxDist, user.getSurveyResults().getMaxDistance())) {
                 newFilteredUsers.add(user);
             }
@@ -224,5 +199,17 @@ public class MatchingService {
         return newFilteredUsers;
     }
 
-
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            return dist;
+        }
+    }
 }
