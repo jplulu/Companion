@@ -17,14 +17,6 @@ public class SurveyResults{
     private int minAge;
     private int maxDistance;
 
-    public int getMaxDistance() {
-        return maxDistance;
-    }
-
-    public void setMaxDistance(int maxDistance) {
-        this.maxDistance = maxDistance;
-    }
-
     public SurveyResults() {
 
     }
@@ -121,5 +113,13 @@ public class SurveyResults{
 
     public void setMinAge(int minAge) {
         this.minAge = minAge;
+    }
+
+    public int getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(int maxDistance) {
+        this.maxDistance = maxDistance;
     }
 }

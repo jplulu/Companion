@@ -14,7 +14,7 @@ public class User {
 
         //Constructors
     public User(@JsonProperty("username") String username,
-                @JsonProperty("password") String password,
+                @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY) String password,
                 @JsonProperty("id") UUID id,
                 @JsonProperty("profile") Profile profile,
                 @JsonProperty("surveyResults") SurveyResults surveyResults) {

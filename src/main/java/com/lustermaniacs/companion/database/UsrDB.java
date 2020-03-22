@@ -9,7 +9,7 @@ import java.util.*;
 public interface UsrDB{
     int addUser(User user);
     int updateUserByUsername(String username, User user);
-    int updateUserProfile(String username, Profile profile);
+    int setUserProfile(String username, Profile profile);
     Optional<User> getUserByUsername(String username);
     List<User> getAllUsers();
     int setSurvey(String username, SurveyResults results);
