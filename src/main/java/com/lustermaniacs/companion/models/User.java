@@ -1,40 +1,54 @@
 package com.lustermaniacs.companion.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.UUID;          // Universally unique identifier class
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class User {
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
     // Instance Fields
-        private String username;
-        private String password;
-        private UUID id;
-        private Profile profile;
-        private SurveyResults surveyResults;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @JsonIgnore
+    private Long id;
+    @Column(unique = true)
+    @NotBlank(message = "username can't be blank")
+    private String username;
+    @NotBlank(message = "password can't be blank")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    @Column(name = "gender_pref")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Integer genderPref;
+    @Column(name = "max_age")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Integer maxAge;
+    @Column(name = "min_age")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Integer minAge;
+    @Column(name = "max_distance")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Integer maxDistance;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Profile profile;
 
-        //Constructors
-    public User(@JsonProperty("username") String username,
-                @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY) String password,
-                @JsonProperty("id") UUID id,
-                @JsonProperty("profile") Profile profile,
-                @JsonProperty("surveyResults") SurveyResults surveyResults) {
+    //Constructors
+    public User() {
+
+    }
+
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.id = id;
-        this.profile = profile;
-        this.surveyResults = surveyResults;
     }
 
     // Getters and Setters
-
-    public SurveyResults getSurveyResults() {
-        return surveyResults;
-    }
-
-    public void setSurveyResults(SurveyResults surveyResults) {
-        this.surveyResults = surveyResults;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -51,12 +65,44 @@ public class User {
         this.password = password;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getGenderPref() {
+        return genderPref;
+    }
+
+    public void setGenderPref(Integer genderPref) {
+        this.genderPref = genderPref;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public Integer getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
+    }
+
+    public Integer getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(Integer maxDistance) {
+        this.maxDistance = maxDistance;
     }
 
     public Profile getProfile() {

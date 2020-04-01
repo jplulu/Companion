@@ -3,37 +3,65 @@ package com.lustermaniacs.companion.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "profiles")
 public class Profile {
-
     // Instance Fields
+    @Id
+    @JsonIgnore
+    private Long id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     private int age;
-    private char gender;
-    private List<String> profilePic;
+    private int gender;
     private String location;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private double longitude;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private double latitude;
     private String bio;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    @MapsId
+    @JsonIgnore
+    private User user;
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Picture> profilePic = new ArrayList<>();
 
-    public Profile(String firstName, String lastName, int age, char gender, List<String> profilePic, String location, double longitude, double latitude, String bio) {
+    public Profile() {
+    }
+
+    public Profile(String firstName, String lastName, int age, int gender, String location, double longitude, double latitude, String bio) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.gender = gender;
-        this.profilePic = profilePic;
         this.location = location;
         this.longitude = longitude;
         this.latitude = latitude;
         this.bio = bio;
     }
 
-    public Profile() {
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getFirstName() {
@@ -60,19 +88,19 @@ public class Profile {
         this.age = age;
     }
 
-    public char getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
-    public List<String> getProfilePic() {
+    public List<Picture> getProfilePic() {
         return profilePic;
     }
 
-    public void setProfilePic(List<String> profilePic) {
+    public void setProfilePic(List<Picture> profilePic) {
         this.profilePic = profilePic;
     }
 
