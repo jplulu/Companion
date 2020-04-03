@@ -32,7 +32,7 @@ public class Profile {
     @JsonIgnore
     private User user;
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Picture> profilePic = new ArrayList<>();
+    private List<Picture> pictures = new ArrayList<>();
 
     public Profile() {
     }
@@ -97,11 +97,11 @@ public class Profile {
     }
 
     public List<Picture> getProfilePic() {
-        return profilePic;
+        return pictures;
     }
 
-    public void setProfilePic(List<Picture> profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePic(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 
     public String getLocation() {

@@ -9,10 +9,9 @@ import javax.persistence.*;
 public class Picture {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @JsonIgnore
     private Integer id;
     private String name;
-    private String path;
+    private String type;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "profile_id", nullable = false)
     @JsonIgnore
@@ -21,9 +20,9 @@ public class Picture {
     public Picture() {
     }
 
-    public Picture(String name, String path) {
+    public Picture(String name, String type) {
         this.name = name;
-        this.path = path;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -42,12 +41,12 @@ public class Picture {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
+    public String getType() {
+        return type;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Profile getProfile() {
