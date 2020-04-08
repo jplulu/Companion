@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.persistence.EntityExistsException;
 
+import java.io.FileNotFoundException;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -29,6 +31,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     protected ResponseEntity<Object> handleEntityExists(EntityExistsException ex) {
         return buildResponseEntity(new ApiError(HttpStatus.CONFLICT, "Username already exists", ex));
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    protected ResponseEntity<Object> handleFileStorage(Exception ex) {
+        return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex));
+    }
+
+    @ExceptionHandler(FileFormatException.class)
+    protected ResponseEntity<Object> handleFileFormat(Exception ex) {
+        return buildResponseEntity(new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage(), ex));
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    protected ResponseEntity<Object> handleFileNotFound(FileNotFoundException ex) {
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, "File not found", ex));
     }
 
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {

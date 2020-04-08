@@ -30,8 +30,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ProfileRepository profileRepository;
-    @Autowired
     private SurveyResponseRepository surveyResponseRepository;
 
     public User addUser(User user) {
