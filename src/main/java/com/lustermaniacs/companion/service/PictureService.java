@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -49,7 +48,7 @@ public class PictureService {
     public Picture storeFile(String username, MultipartFile file) {
         User user = userRepository.findByUsername(username);
         if(user == null)
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         String type = file.getContentType();
         if(!type.equals("image/jpeg") && !type.equals("image/png"))
             throw new FileFormatException("File must be an image");
@@ -68,10 +67,10 @@ public class PictureService {
         return pictureRepository.save(picture);
     }
 
-    public Resource getFileAsResource(Integer fileId) throws FileNotFoundException {
+    public Resource getFileAsResource(Integer fileId) {
         Optional<Picture> picture = pictureRepository.findById(fileId);
         if(picture.isEmpty())
-            throw new FileNotFoundException();
+            throw new EntityNotFoundException("File not found");
         String fileName = picture.get().getName();
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
@@ -79,20 +78,20 @@ public class PictureService {
             if(resource.exists())
                 return resource;
             else
-                throw new FileNotFoundException();
+                throw new EntityNotFoundException("File not found");
         } catch (MalformedURLException ex) {
-            throw new FileNotFoundException();
+            throw new EntityNotFoundException("File not found");
         }
     }
 
     @Transactional
-    public void deleteFile(String username, Integer fileId) throws IOException {
+    public void deleteFile(String username, Integer fileId) throws EntityNotFoundException, IOException {
         User user = userRepository.findByUsername(username);
         if(user == null)
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         Optional<Picture> picture = pictureRepository.findById(fileId);
         if(picture.isEmpty())
-            throw new FileNotFoundException();
+            throw new EntityNotFoundException("File not found");
         String fileName = picture.get().getName();
         pictureRepository.deleteByNameAndProfile(fileName, user.getProfile());
         Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
