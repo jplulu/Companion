@@ -64,7 +64,7 @@ public class UserController {
             return new ResponseEntity<>(matchedUserProfiles, HttpStatus.OK);
     }
 
-    @PostMapping("/{username}/matches")
+    @PutMapping("/{username}/matches")
     public ResponseEntity<?> modifyMatchStatus(@PathVariable("username") String username, @RequestParam("id") long id, @RequestParam("status") String status) throws EntityNotFoundException {
         if(status.equals("refuse")) {
             matchingService.refuseMatch(username, id);
