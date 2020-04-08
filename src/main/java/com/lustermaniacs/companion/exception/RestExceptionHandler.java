@@ -25,7 +25,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex) {
-        return buildResponseEntity(new ApiError(NOT_FOUND, "User not found", ex));
+        return buildResponseEntity(new ApiError(NOT_FOUND, ex.getMessage(), ex));
     }
 
     @ExceptionHandler(EntityExistsException.class)
@@ -41,11 +41,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FileFormatException.class)
     protected ResponseEntity<Object> handleFileFormat(Exception ex) {
         return buildResponseEntity(new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage(), ex));
-    }
-
-    @ExceptionHandler(FileNotFoundException.class)
-    protected ResponseEntity<Object> handleFileNotFound(FileNotFoundException ex) {
-        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, "File not found", ex));
     }
 
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {

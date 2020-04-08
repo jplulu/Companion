@@ -31,7 +31,7 @@ public class PictureController {
     }
 
     @GetMapping
-    public ResponseEntity<Resource> getPicture(@RequestParam("fileId") Integer id, HttpServletRequest request) throws IOException {
+    public ResponseEntity<Resource> getPicture(@RequestParam("id") Integer id, HttpServletRequest request) throws IOException, EntityNotFoundException {
         Resource resource = pictureService.getFileAsResource(id);
         String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         return ResponseEntity.ok()
@@ -41,7 +41,7 @@ public class PictureController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<?> deletePicture(@PathVariable("username") String username, @RequestParam("fileId") Integer id) throws IOException {
+    public ResponseEntity<?> deletePicture(@PathVariable("username") String username, @RequestParam("id") Integer id) throws IOException, EntityNotFoundException {
         pictureService.deleteFile(username, id);
         return new ResponseEntity<>("Picture deleted", HttpStatus.OK);
     }
