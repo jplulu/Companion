@@ -31,16 +31,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Component("ValidUserCheck")
-    public class ValidUserCheck{
-        public boolean hasPermission(String username, String principal) {
-            Profile profile = userRepository.findByUsername(principal).getProfile();
-            if (username.equals(principal) || matchingService.getAllSysmatchUser(username).contains(profile))
-                return true;
-            else
-                return false;
-        }
-    }
+
 
     @PostMapping("/register")
     public ResponseEntity<?> addUser(@Valid @RequestBody User user) throws EntityExistsException {
