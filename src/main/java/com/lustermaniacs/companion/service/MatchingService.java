@@ -1,16 +1,16 @@
 package com.lustermaniacs.companion.service;
 
 import com.lustermaniacs.companion.models.Match;
+import com.lustermaniacs.companion.models.MatchStatus;
 import com.lustermaniacs.companion.repository.*;
 import com.lustermaniacs.companion.models.Profile;
 import com.lustermaniacs.companion.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.Transient;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class MatchingService {
     public List<Profile> getAllSysmatchUser(String username) {
         User mainUser = userRepository.findByUsername(username);
         if(mainUser == null)
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         List<User> matchedUsers = matchRepository.findMatchedUsersByUser1(mainUser);
         matchedUsers.addAll(matchRepository.findMatchedUsersByUser2(mainUser));
         List<Profile> matchedUserProfiles = new ArrayList<>();
@@ -40,63 +40,92 @@ public class MatchingService {
     }
 
     @Transactional
-    public List<Profile> matchUsers(String username) throws IOException {
+    @Modifying
+    public List<Profile> matchUsers(String username) {
         int THRESHOLD = 5;
         User mainUser = userRepository.findByUsername(username);
         if(mainUser == null)
-            throw new EntityNotFoundException();
-        // Check if already matched and remove from other peoples
-        matchRepository.deleteByUser1OrUser2(mainUser, mainUser);
+            throw new EntityNotFoundException("User not found");
+        matchRepository.setInactive(mainUser);
         //  Go through a filtered user database and attempt to get 100 matches
         List<User> filteredUsers = matchingFilter(mainUser);
         List<Profile> matchedUserProfiles = new ArrayList<>();
+        int count = 0;
         for (User user : filteredUsers) {
             if(surveyResponseRepository.getNumMatches(mainUser.getId(), user.getId()) >= THRESHOLD) {
-                Match newMatch = new Match(mainUser, user);
-                matchRepository.save(newMatch);
-                matchedUserProfiles.add(user.getProfile());
+                Match match1 = matchRepository.findByUser1AndUser2(mainUser, user);
+                Match match2 = matchRepository.findByUser1AndUser2(user, mainUser);
+                if(match1 == null && match2 == null) {
+                    Match newMatch = new Match(mainUser, user, MatchStatus.ACTIVE);
+                    matchRepository.save(newMatch);
+                    matchedUserProfiles.add(user.getProfile());
+                    count++;
+                }
+                else if(match1 != null && match1.getMatchStatus() != MatchStatus.REFUSED) {
+                    match1.setMatchStatus(MatchStatus.ACTIVE);
+                    matchRepository.save(match1);
+                    matchedUserProfiles.add(user.getProfile());
+                    count++;
+                }
+                else if(match2 != null && match2.getMatchStatus() != MatchStatus.REFUSED) {
+                    match2.setMatchStatus(MatchStatus.ACTIVE);
+                    matchRepository.save(match2);
+                    matchedUserProfiles.add(user.getProfile());
+                    count++;
+                }
+                if(count > 99)
+                    break;
             }
-            //once 100 matches made, stop
-            if (matchRepository.countByUser1OrUser2(mainUser, mainUser) > 99)
-                break;
         }
         return matchedUserProfiles;
     }
 
-//    // Function to match two given users based on a # of shared interest (threshold)
-//    private boolean matchTwoUsers(User usr1, User usr2, int threshold){
-//        // Initialize a variable to keep track of matches
-//        int numMatches = 0;
-//        //  Compare profile parameters and count how many same results
-//        List<String> usr1Sport = new ArrayList<>(usr1.getSurveyResults().getSportsAnswers());
-//        usr1Sport.retainAll(usr2.getSurveyResults().getSportsAnswers());
-//        List<String> usr1Food = new ArrayList<>(usr1.getSurveyResults().getFoodAnswers());
-//        usr1Food.retainAll(usr2.getSurveyResults().getFoodAnswers());
-//        List<String> usr1Music = new ArrayList<>(usr1.getSurveyResults().getMusicAnswers());
-//        usr1Music.retainAll(usr2.getSurveyResults().getMusicAnswers());
-//        List<String> usr1Hobby = new ArrayList<>(usr1.getSurveyResults().getHobbyAnswers());
-//        usr1Hobby.retainAll(usr2.getSurveyResults().getHobbyAnswers());
-//
-//        numMatches += usr1Sport.size();
-//        numMatches += usr1Food.size();
-//        numMatches += usr1Music.size();
-//        numMatches += usr1Hobby.size();
-//
-//        if (usr1.getSurveyResults().getPersonalityType() == usr2.getSurveyResults().getPersonalityType())
-//            numMatches++;
-//        if (usr1.getSurveyResults().getLikesAnimals() == usr2.getSurveyResults().getLikesAnimals())
-//            numMatches++;
-//
-//        if (numMatches >= threshold) {
-//            matchedUsersDB.addMatchedUser(usr2.getUsername(), usr1.getUsername());
-//            return true;
-//        }
-//        else
-//            return false;
-//    }
+    public void refuseMatch(String username, Long idToRefuse) {
+        User mainUser = userRepository.findByUsername(username);
+        if(mainUser == null)
+            throw new EntityNotFoundException("User not found");
+        Optional<User> testUser = userRepository.findById(idToRefuse);
+        if(testUser.isEmpty())
+            throw new EntityNotFoundException("User not found");
+        User refusedUser = testUser.get();
+        Match match1 = matchRepository.findByUser1AndUser2(mainUser, refusedUser);
+        Match match2 = matchRepository.findByUser1AndUser2(refusedUser, mainUser);
+        if(match1 == null && match2 == null)
+            throw new EntityNotFoundException("Match not found");
+        else if(match1 != null) {
+            match1.setMatchStatus(MatchStatus.REFUSED);
+            matchRepository.save(match1);
+        }
+        else {
+            match2.setMatchStatus(MatchStatus.REFUSED);
+            matchRepository.save(match2);
+        }
+    }
+
+    public void activateMatch(String username, Long idToActivate) {
+        User mainUser = userRepository.findByUsername(username);
+        if(mainUser == null)
+            throw new EntityNotFoundException("User not found");
+        Optional<User> testUser = userRepository.findById(idToActivate);
+        if(testUser.isEmpty())
+            throw new EntityNotFoundException("User not found");
+        User refusedUser = testUser.get();
+        Match match1 = matchRepository.findByUser1AndUser2(mainUser, refusedUser);
+        Match match2 = matchRepository.findByUser1AndUser2(refusedUser, mainUser);
+        if(match1 == null && match2 == null)
+            throw new EntityNotFoundException("Match not found");
+        else if(match1 != null) {
+            match1.setMatchStatus(MatchStatus.ACTIVE);
+            matchRepository.save(match1);
+        }
+        else {
+            match2.setMatchStatus(MatchStatus.ACTIVE);
+            matchRepository.save(match2);
+        }
+    }
 
     // Function to filter out users who do not meet target person's criteria from their "matching pool"
-    public List<User> matchingFilter(User mainUser) throws IOException {
+    public List<User> matchingFilter(User mainUser) {
         List<User> filteredUsersByGenderAndAge;
         if(mainUser.getGenderPref() == 3)
             filteredUsersByGenderAndAge = profileRepository.filterByGenderPref3AndAge(mainUser.getId(), mainUser.getProfile().getGender(), mainUser.getMinAge(), mainUser.getMaxAge(), mainUser.getProfile().getAge());
@@ -105,7 +134,7 @@ public class MatchingService {
         return filterByLocation(mainUser, filteredUsersByGenderAndAge);
     }
 
-    private List<User> filterByLocation(User curUser, List<User> filteredUsers) throws IOException {
+    private List<User> filterByLocation(User curUser, List<User> filteredUsers) {
         List<User> newFilteredUsers = new ArrayList<>();
         int curMaxDist = curUser.getMaxDistance();
 

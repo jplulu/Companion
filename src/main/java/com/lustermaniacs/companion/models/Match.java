@@ -19,12 +19,16 @@ public class Match {
     @JoinColumn(name = "user2_id", nullable = false)
     private User user2;
 
+    @Enumerated(EnumType.STRING)
+    private MatchStatus matchStatus;
+
     public Match() {
     }
 
-    public Match(User user1, User user2) {
+    public Match(User user1, User user2, MatchStatus matchStatus) {
         this.user1 = user1;
         this.user2 = user2;
+        this.matchStatus = matchStatus;
     }
 
     public Integer getId() {
@@ -49,5 +53,13 @@ public class Match {
 
     public void setUser2(User user2) {
         this.user2 = user2;
+    }
+
+    public MatchStatus getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(MatchStatus matchStatus) {
+        this.matchStatus = matchStatus;
     }
 }

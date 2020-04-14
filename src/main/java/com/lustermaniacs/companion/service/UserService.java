@@ -31,8 +31,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ProfileRepository profileRepository;
-    @Autowired
     private SurveyResponseRepository surveyResponseRepository;
 
     public User addUser(User user) {
@@ -51,7 +49,7 @@ public class UserService {
         if(user != null)
             return user;
         else
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
     }
 
     public User updateUserByUsername(String username, User newUser) {
@@ -60,7 +58,7 @@ public class UserService {
         if (oldUser != null)
             updatedUser = oldUser;
         else
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         if((newUser.getUsername() != null) && (userRepository.findByUsername(newUser.getUsername()) == null))
             updatedUser.setUsername(newUser.getUsername());
         else
@@ -74,7 +72,7 @@ public class UserService {
     public Profile setUserProfile(String username, Profile profile) throws IOException {
         User u = userRepository.findByUsername(username);
         if(u == null)
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         Profile newProfile = u.getProfile();
         if(profile.getFirstName() != null)
             newProfile.setFirstName(profile.getFirstName());
@@ -101,7 +99,7 @@ public class UserService {
     public void setSurvey(String username, SurveyResults results) {
         User user = userRepository.findByUsername(username);
         if(user == null)
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         Set<Integer> sport = results.getSport();
         if(sport != null && !sport.isEmpty()) {
             surveyResponseRepository.deleteByQuestionAndUser(Question.SPORT, user);
