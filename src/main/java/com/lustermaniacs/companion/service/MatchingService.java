@@ -52,6 +52,7 @@ public class MatchingService {
         List<Profile> matchedUserProfiles = new ArrayList<>();
         int count = 0;
         for (User user : filteredUsers) {
+            System.out.println(surveyResponseRepository.getNumMatches(mainUser.getId(), user.getId()));
             if(surveyResponseRepository.getNumMatches(mainUser.getId(), user.getId()) >= THRESHOLD) {
                 Match match1 = matchRepository.findByUser1AndUser2(mainUser, user);
                 Match match2 = matchRepository.findByUser1AndUser2(user, mainUser);

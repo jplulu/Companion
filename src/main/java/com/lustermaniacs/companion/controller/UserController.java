@@ -1,7 +1,7 @@
 package com.lustermaniacs.companion.controller;
 
 import com.lustermaniacs.companion.models.Profile;
-import com.lustermaniacs.companion.models.SurveyResults;
+import com.lustermaniacs.companion.models.SurveyResultsDTO;
 import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.MatchingService;
 import com.lustermaniacs.companion.service.UserService;
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}/survey")
-    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws EntityNotFoundException {
+    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResultsDTO results) throws EntityNotFoundException {
         userService.setSurvey(username, results);
         List<Profile> matchedUserProfiles = matchingService.matchUsers(username);
         if(matchedUserProfiles == null || matchedUserProfiles.isEmpty())
