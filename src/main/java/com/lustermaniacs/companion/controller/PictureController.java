@@ -20,6 +20,7 @@ import java.io.IOException;
 
 @RequestMapping("/picture")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class PictureController {
     @Autowired
     private PictureService pictureService;
