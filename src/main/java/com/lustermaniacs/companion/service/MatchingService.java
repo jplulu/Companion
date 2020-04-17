@@ -27,21 +27,18 @@ public class MatchingService {
     @Autowired
     private SurveyResponseRepository surveyResponseRepository;
 
-    public List<Profile> getAllSysmatchUser(String username) {
+    public List<User> getAllSysmatchUser(String username) {
         User mainUser = userRepository.findByUsername(username);
         if(mainUser == null)
             throw new EntityNotFoundException("User not found");
         List<User> matchedUsers = matchRepository.findMatchedUsersByUser1(mainUser);
         matchedUsers.addAll(matchRepository.findMatchedUsersByUser2(mainUser));
-        List<Profile> matchedUserProfiles = new ArrayList<>();
-        for(User u : matchedUsers)
-            matchedUserProfiles.add(u.getProfile());
-        return matchedUserProfiles;
+        return matchedUsers;
     }
 
     @Transactional
     @Modifying
-    public List<Profile> matchUsers(String username) {
+    public List<User> matchUsers(String username) {
         int THRESHOLD = 5;
         User mainUser = userRepository.findByUsername(username);
         if(mainUser == null)
@@ -49,36 +46,35 @@ public class MatchingService {
         matchRepository.setInactive(mainUser);
         //  Go through a filtered user database and attempt to get 100 matches
         List<User> filteredUsers = matchingFilter(mainUser);
-        List<Profile> matchedUserProfiles = new ArrayList<>();
+        List<User> matchedUsers = new ArrayList<>();
         int count = 0;
         for (User user : filteredUsers) {
-            System.out.println(surveyResponseRepository.getNumMatches(mainUser.getId(), user.getId()));
             if(surveyResponseRepository.getNumMatches(mainUser.getId(), user.getId()) >= THRESHOLD) {
                 Match match1 = matchRepository.findByUser1AndUser2(mainUser, user);
                 Match match2 = matchRepository.findByUser1AndUser2(user, mainUser);
                 if(match1 == null && match2 == null) {
                     Match newMatch = new Match(mainUser, user, MatchStatus.ACTIVE);
                     matchRepository.save(newMatch);
-                    matchedUserProfiles.add(user.getProfile());
+                    matchedUsers.add(user);
                     count++;
                 }
                 else if(match1 != null && match1.getMatchStatus() != MatchStatus.REFUSED) {
                     match1.setMatchStatus(MatchStatus.ACTIVE);
                     matchRepository.save(match1);
-                    matchedUserProfiles.add(user.getProfile());
+                    matchedUsers.add(user);
                     count++;
                 }
                 else if(match2 != null && match2.getMatchStatus() != MatchStatus.REFUSED) {
                     match2.setMatchStatus(MatchStatus.ACTIVE);
                     matchRepository.save(match2);
-                    matchedUserProfiles.add(user.getProfile());
+                    matchedUsers.add(user);
                     count++;
                 }
                 if(count > 99)
                     break;
             }
         }
-        return matchedUserProfiles;
+        return matchedUsers;
     }
 
     public void refuseMatch(String username, Long idToRefuse) {

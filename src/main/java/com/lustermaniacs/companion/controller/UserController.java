@@ -50,20 +50,20 @@ public class UserController {
     @PutMapping("/{username}/survey")
     public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResultsDTO results) throws EntityNotFoundException {
         userService.setSurvey(username, results);
-        List<Profile> matchedUserProfiles = matchingService.matchUsers(username);
-        if(matchedUserProfiles == null || matchedUserProfiles.isEmpty())
+        List<User> matchedUsers = matchingService.matchUsers(username);
+        if(matchedUsers == null || matchedUsers.isEmpty())
             return new ResponseEntity<>("No matches found :(", HttpStatus.OK);
         else
-            return new ResponseEntity<>(matchedUserProfiles, HttpStatus.OK);
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{username}/matches")
     public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException{
-        List<Profile> matchedUserProfiles = matchingService.getAllSysmatchUser(username);
-        if(matchedUserProfiles == null || matchedUserProfiles.isEmpty())
+        List<User> matchedUsers = matchingService.getAllSysmatchUser(username);
+        if(matchedUsers == null || matchedUsers.isEmpty())
             return new ResponseEntity<>("No matches found :(", HttpStatus.OK);
         else
-            return new ResponseEntity<>(matchedUserProfiles, HttpStatus.OK);
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
     @PutMapping("/{username}/matches")
