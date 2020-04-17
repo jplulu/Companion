@@ -2,6 +2,7 @@ package com.lustermaniacs.companion.util;
 
 import com.lustermaniacs.companion.filters.JwtRequestFilter;
 import com.lustermaniacs.companion.models.Profile;
+import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.repository.UserRepository;
 import com.lustermaniacs.companion.service.MatchingService;
 import com.lustermaniacs.companion.service.MyUserDetailsService;
@@ -21,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -42,8 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
-                .disable().authorizeRequests().antMatchers("/authenticate","/user/register").permitAll()
-
+                .disable().authorizeRequests().antMatchers("/authenticate","/user/register","/user/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -64,7 +66,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public class ValidUserCheck{
         public boolean hasPermission(String username, String principal) {
             Profile profile = userRepository.findByUsername(principal).getProfile();
-            return username.equals(principal) || matchingService.getAllSysmatchUser(username).contains(profile);
+//            System.out.println("Principal"+profile);
+//            System.out.println("Username"+userRepository.findByUsername(username).getProfile());
+            List<User> matched = matchingService.getAllSysmatchUser(username);
+            boolean hasPermission = false;
+            for (User user : matched) {
+                if (profile.getId().equals(user.getId())) {
+                    hasPermission = true;
+                    break;
+                }
+            }
+            return username.equals(principal) || hasPermission;
         }
     }
 
