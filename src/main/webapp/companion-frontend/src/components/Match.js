@@ -31,7 +31,7 @@ class Match extends Component {
                 <CardMedia
                     image={imageURL ? imageURL : noImage}
                     title="Profile picture" className={classes.image}/>
-                    <CardContent classes={classes.content}>
+                    <CardContent className={classes.content}>
                         <Typography variant="h5" color="primary">{firstName} {lastName}</Typography>
                         <Typography variant="body1">{bio}</Typography>
                         <Typography variant="body2" color="textSecondary">{location}</Typography>

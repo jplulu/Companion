@@ -12,7 +12,6 @@ class home extends Component {
     componentDidMount() {
         axios.get("http://localhost:8080/user/2/matches")
             .then(response => {
-                console.log(response.data);
                 this.setState({
                     matches: response.data
                 })
@@ -22,7 +21,7 @@ class home extends Component {
 
     render() {
         let recentMatchesMarkup = this.state.matches ? (
-            this.state.matches.map(match => <Match match={match}/>)
+            this.state.matches.map(match => <Match key={match.id} match={match}/>)
         ) : <p>Loading...</p>;
         return(
             <Grid container spacing={4}>
