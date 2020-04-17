@@ -7,6 +7,7 @@ import com.lustermaniacs.companion.models.*;
 import com.lustermaniacs.companion.repository.SurveyResponseRepository;
 import com.lustermaniacs.companion.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,8 @@ public class UserService {
     public User addUser(User user) {
         if(userRepository.findByUsername(user.getUsername()) != null)
             throw new EntityExistsException();
-        User newUser = new User(user.getUsername(), user.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User newUser = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()));
         Profile newProfile = new Profile();
         newUser.setProfile(newProfile);
         newProfile.setUser(newUser);
