@@ -12,7 +12,6 @@ import java.util.List;
 public class Profile {
     // Instance Fields
     @Id
-    @JsonIgnore
     private Long id;
     @Column(name = "first_name")
     private String firstName;
