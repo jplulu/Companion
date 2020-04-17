@@ -107,7 +107,7 @@ import java.util.Set;
 //    }
 //}
 
-public class SurveyResults{
+public class SurveyResultsDTO {
     //Instance Fields
     private Set<Integer> sport;
     private Set<Integer> food;
@@ -120,11 +120,11 @@ public class SurveyResults{
     private int minAge;
     private int maxDistance;
 
-    public SurveyResults() {
+    public SurveyResultsDTO() {
 
     }
 
-    public SurveyResults(Set<Integer> sport, Set<Integer> food, Set<Integer> music, Set<Integer> hobby, int personalityType, int likesAnimals, int genderPreference, int maxAge, int minAge, int maxDistance) {
+    public SurveyResultsDTO(Set<Integer> sport, Set<Integer> food, Set<Integer> music, Set<Integer> hobby, int personalityType, int likesAnimals, int genderPreference, int maxAge, int minAge, int maxDistance) {
         this.sport = sport;
         this.food = food;
         this.music = music;

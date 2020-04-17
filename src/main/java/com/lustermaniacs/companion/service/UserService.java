@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.lustermaniacs.companion.models.*;
-import com.lustermaniacs.companion.repository.ProfileRepository;
 import com.lustermaniacs.companion.repository.SurveyResponseRepository;
 import com.lustermaniacs.companion.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Set;
 
 
@@ -96,7 +94,7 @@ public class UserService {
     }
 
     @Transactional
-    public void setSurvey(String username, SurveyResults results) {
+    public void setSurvey(String username, SurveyResultsDTO results) {
         User user = userRepository.findByUsername(username);
         if(user == null)
             throw new EntityNotFoundException("User not found");
