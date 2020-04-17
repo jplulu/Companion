@@ -8,6 +8,7 @@ import com.lustermaniacs.companion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
@@ -30,6 +31,7 @@ public class UserController {
         return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
     }
 
+    @PreAuthorize("@ValidUserCheck.hasPermission(#username,authentication.principal.getUsername())")
     @GetMapping("/{username}")
     public ResponseEntity<?> getUserByUserName(@PathVariable("username") String username) throws EntityNotFoundException {
         return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
