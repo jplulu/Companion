@@ -15,7 +15,6 @@ public class User implements Serializable {
     // Instance Fields
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
     @Column(unique = true)
     @NotBlank(message = "username can't be blank")

@@ -1,7 +1,7 @@
 package com.lustermaniacs.companion.controller;
 
 import com.lustermaniacs.companion.models.Profile;
-import com.lustermaniacs.companion.models.SurveyResults;
+import com.lustermaniacs.companion.models.SurveyResultsDTO;
 import com.lustermaniacs.companion.models.User;
 import com.lustermaniacs.companion.service.MatchingService;
 import com.lustermaniacs.companion.service.UserService;
@@ -17,8 +17,10 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-@RequestMapping("/user")
+
 @RestController
+@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -48,22 +50,22 @@ public class UserController {
     }
 
     @PutMapping("/{username}/survey")
-    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResults results) throws EntityNotFoundException {
+    public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResultsDTO results) throws EntityNotFoundException {
         userService.setSurvey(username, results);
-        List<Profile> matchedUserProfiles = matchingService.matchUsers(username);
-        if(matchedUserProfiles == null || matchedUserProfiles.isEmpty())
+        List<User> matchedUsers = matchingService.matchUsers(username);
+        if(matchedUsers == null || matchedUsers.isEmpty())
             return new ResponseEntity<>("No matches found :(", HttpStatus.OK);
         else
-            return new ResponseEntity<>(matchedUserProfiles, HttpStatus.OK);
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{username}/matches")
     public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException{
-        List<Profile> matchedUserProfiles = matchingService.getAllSysmatchUser(username);
-        if(matchedUserProfiles == null || matchedUserProfiles.isEmpty())
+        List<User> matchedUsers = matchingService.getAllSysmatchUser(username);
+        if(matchedUsers == null || matchedUsers.isEmpty())
             return new ResponseEntity<>("No matches found :(", HttpStatus.OK);
         else
-            return new ResponseEntity<>(matchedUserProfiles, HttpStatus.OK);
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
     @PutMapping("/{username}/matches")
