@@ -4,6 +4,7 @@ import {
     CLEAR_ERRORS,
     LOADING_UI,
     SET_UNAUTHENTICATED,
+    LOADING_USER
 } from '../types';
 import axios from 'axios';
 
@@ -50,6 +51,7 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const getUserData = (username) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
     const url = `http://localhost:8080/user/${username}`;
     axios.get(url)
         .then(res => {

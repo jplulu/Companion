@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import axios from'axios';
+// Components
 import Match from '../components/Match'
+import Profile from '../components/Profile'
 //MUI
 import Grid from '@material-ui/core/Grid';
 
@@ -26,7 +28,7 @@ class home extends Component {
         return(
             <Grid container spacing={4}>
                 <Grid item sm={4} xs={12}>
-                    <p>Profile...</p>
+                    <Profile/>
                 </Grid>
                 <Grid item sm={8} xs={12}>
                     {recentMatchesMarkup}
