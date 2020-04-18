@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
+import axios from'axios';
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -34,17 +35,9 @@ class login extends Component {
             isError = true;
             err.username = "Must not be empty";
         }
-        else if(this.state.username.length < 5) {
-            isError = true;
-            err.username = "Needs to be at least 5 characters long";
-        }
         if(this.state.password === "") {
             isError = true;
             err.password = "Must not be empty";
-        }
-        else if(this.state.password.length < 5) {
-            isError = true;
-            err.password = "Needs to be at least 5 characters long";
         }
 
         this.setState({
@@ -70,25 +63,24 @@ class login extends Component {
                 username: this.state.username,
                 password: this.state.password
             };
-            // axios.post('', userData)
-            //     .then(res => {
-            //         this.setState({
-            //             loading: false
-            //         });
-            //         this.props.history.push('/');
-            //     })
-            //     .catch(err => {
-            //         this.setState({
-            //             errors: {
-            //                 general: err.response.data
-            //             },
-            //             loading: false
-            //         })
-            //     });
-            this.props.history.push('/');
-            this.setState({
-                loading: false
-            })
+            console.log(userData);
+            axios.post('http://localhost:8080/authenticate', userData)
+                .then(res => {
+                    localStorage.setItem('jwtToken', `Bearer ${res.data.jwt}`);
+                    this.setState({
+                        loading: false
+                    });
+                    this.props.history.push('/');
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    this.setState({
+                        errors: {
+                            general: err.response.data.message
+                        },
+                        loading: false
+                    })
+                });
         }
     };
 
