@@ -1,5 +1,6 @@
 package com.lustermaniacs.companion.models;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +29,7 @@ public class UserPrincipal implements UserDetails {
             return user.getPassword();
         }
         catch (Exception e) {
-            throw new EntityNotFoundException("Username does not exist.");
+            throw new BadCredentialsException("Username does not exist.");
         }
     }
 
