@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
-
     @Autowired
     private UserService userService;
     @Autowired
