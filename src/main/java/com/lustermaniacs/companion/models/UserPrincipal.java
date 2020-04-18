@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -22,7 +23,13 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        try {
+            String password = user.getPassword();
+            return user.getPassword();
+        }
+        catch (Exception e) {
+            throw new EntityNotFoundException("Username does not exist.");
+        }
     }
 
     @Override
