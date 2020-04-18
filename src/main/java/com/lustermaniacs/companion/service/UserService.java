@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.lustermaniacs.companion.models.*;
 import com.lustermaniacs.companion.repository.SurveyResponseRepository;
 import com.lustermaniacs.companion.repository.UserRepository;
+import com.lustermaniacs.companion.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +32,12 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private SurveyResponseRepository surveyResponseRepository;
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
-    public User addUser(User user) {
+    public AuthenticationResponse addUser(User user) {
         if(userRepository.findByUsername(user.getUsername()) != null)
             throw new EntityExistsException();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -39,7 +45,10 @@ public class UserService {
         Profile newProfile = new Profile();
         newUser.setProfile(newProfile);
         newProfile.setUser(newUser);
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getUsername());
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+        return new AuthenticationResponse(jwt);
     }
 
     public User getUserByUsername(String username) {
