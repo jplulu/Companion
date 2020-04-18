@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 // Icons
 import LocationOn from '@material-ui/icons/LocationOn';
 import EditIcon from '@material-ui/icons/Edit'
+import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 
 //Redux
 import { connect } from 'react-redux';
@@ -35,6 +36,10 @@ class Profile extends Component {
     handleEditPicture = () => {
         const fileInput = document.getElementById('imageInput');
         fileInput.click();
+    };
+
+    handleLogout = () => {
+        this.props.logoutUser();
     };
 
     render() {
@@ -68,6 +73,11 @@ class Profile extends Component {
                             </Fragment>
                         )}
                     </div>
+                    <Tooltip title="Logout" placement="top">
+                        <IconButton onClick={this.handleLogout}>
+                            <KeyboardReturn color="primary"/>
+                        </IconButton>
+                    </Tooltip>
                 </div>
             </Paper>
         ) : (
