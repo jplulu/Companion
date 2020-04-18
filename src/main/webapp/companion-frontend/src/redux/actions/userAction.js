@@ -26,6 +26,29 @@ export const loginUser = (userData, history) => (dispatch) => {
         });
 };
 
+export const signupUser = (newUserData, history) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios.post('http://localhost:8080/user/register', newUserData)
+        .then(res => {
+            setAuthorizationHeader(res.data.jwt);
+            dispatch(getUserData(newUserData.username));
+            dispatch({ type: CLEAR_ERRORS});
+            history.push('/');
+        })
+        .catch(err => {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+};
+
+export const logoutUser = () => (dispatch) => {
+    localStorage.removeItem('jwtToken');
+    delete axios.defaults.headers.common['Authorization'];
+    dispatch({ type: SET_UNAUTHENTICATED });
+};
+
 export const getUserData = (username) => (dispatch) => {
     const url = `http://localhost:8080/user/${username}`;
     axios.get(url)
@@ -36,4 +59,10 @@ export const getUserData = (username) => (dispatch) => {
             })
         })
         .catch(err => console.log(err))
+};
+
+const setAuthorizationHeader = (token) => {
+    const jwtToken = `Bearer ${token}`;
+    localStorage.setItem('jwtToken', jwtToken);
+    axios.defaults.headers.common['Authorization'] = jwtToken;
 };
