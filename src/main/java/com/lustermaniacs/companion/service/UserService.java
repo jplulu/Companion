@@ -81,9 +81,9 @@ public class UserService {
         if(u == null)
             throw new EntityNotFoundException("User not found");
         Profile newProfile = u.getProfile();
-        if(profile.getFirstName() != null)
+        if(profile.getFirstName() != null && !profile.getFirstName().isEmpty())
             newProfile.setFirstName(profile.getFirstName());
-        if(profile.getLastName() != null)
+        if(profile.getLastName() != null && !profile.getLastName().isEmpty())
             newProfile.setLastName(profile.getLastName());
         if(profile.getGender() != 0)
             newProfile.setGender(profile.getGender());
@@ -91,7 +91,7 @@ public class UserService {
             newProfile.setBio(profile.getBio());
         if(profile.getAge() != 0)
             newProfile.setAge(profile.getAge());
-        if(profile.getLocation() != null) {
+        if(profile.getLocation() != null && !profile.getLocation().isEmpty()) {
             newProfile.setLocation(profile.getLocation());
             double[] coordinates = obtainCoordinates(profile.getLocation());
             newProfile.setLatitude(coordinates[0]);

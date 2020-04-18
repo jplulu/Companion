@@ -73,6 +73,16 @@ export const uploadImage = (username, formData) => (dispatch) => {
         .catch(err => console.log(err.response))
 };
 
+export const editUserDetails = (username, userDetails) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    const url = `http://localhost:8080/user/${username}/profile`;
+    axios.put(url, userDetails)
+        .then(() => {
+            dispatch(getUserData(username));
+        })
+        .catch(err => console.log(err));
+};
+
 const setAuthorizationHeader = (token) => {
     const jwtToken = `Bearer ${token}`;
     localStorage.setItem('jwtToken', jwtToken);
