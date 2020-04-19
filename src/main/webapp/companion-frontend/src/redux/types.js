@@ -10,3 +10,4 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 // Data reducer types
 export const SET_MATCHES = 'SET_MATCHES';
 export const LOADING_MATCHES = 'LOADING_MATCHES';
+export const DELETE_MATCH = 'DELETE_MATCH';

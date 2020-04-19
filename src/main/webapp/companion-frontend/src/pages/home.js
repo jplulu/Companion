@@ -16,11 +16,13 @@ const styles = (theme) => ({
 class home extends Component {
 
     render() {
-        const {user: {authenticated, matches}} = this.props;
+        const {user: {username, authenticated, matches, loadingMatches}} = this.props;
         if(authenticated) {
-            let recentMatchesMarkup = (matches && matches.length) ? (
-                matches.map(match => <Match key={match.id} match={match}/>)
-            ) : <p>No Matches Found</p>;
+            let recentMatchesMarkup = !loadingMatches ? ((matches && matches.length) ? (
+                matches.map(match => <Match key={match.id} curUsername={username} match={match}/>)
+            ) : <h2>No Matches Found</h2>) : (
+                <p>Loading...</p>
+            );
             return (
                 <Grid container spacing={4}>
                     <Grid item sm={4} xs={12}>

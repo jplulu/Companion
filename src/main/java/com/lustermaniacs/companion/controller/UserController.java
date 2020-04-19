@@ -59,12 +59,9 @@ public class UserController {
     }
 
     @GetMapping("/{username}/matches")
-    public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException{
+    public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException {
         List<User> matchedUsers = matchingService.getAllSysmatchUser(username);
-        if(matchedUsers == null || matchedUsers.isEmpty())
-            return new ResponseEntity<>("No matches found :(", HttpStatus.OK);
-        else
-            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
+        return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
     @PutMapping("/{username}/matches")

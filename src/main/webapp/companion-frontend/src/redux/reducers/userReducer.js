@@ -1,5 +1,5 @@
 import {
-    SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED, LOADING_USER, SET_MATCHES, LOADING_MATCHES
+    SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED, LOADING_USER, SET_MATCHES, LOADING_MATCHES, DELETE_MATCH
 } from '../types';
 
 const initialState = {
@@ -33,6 +33,12 @@ export default function(state = initialState, action) {
                 ...state,
                 loadingMatches: false,
                 matches: action.payload
+            };
+        case DELETE_MATCH:
+            let index = state.matches.findIndex(match => match.id === action.payload);
+            state.matches.splice(index, 1);
+            return {
+                ...state
             };
         case LOADING_USER:
             return {
