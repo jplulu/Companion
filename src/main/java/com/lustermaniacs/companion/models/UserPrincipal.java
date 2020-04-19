@@ -1,9 +1,11 @@
 package com.lustermaniacs.companion.models;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -22,7 +24,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        try {
+            return user.getPassword();
+        }
+        catch (Exception e) {
+            throw new BadCredentialsException("Wrong username or password");
+        }
     }
 
     @Override
