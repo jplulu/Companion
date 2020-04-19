@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from 'react-router-dom'
 import EditDetails from './EditDetails'
-
 // MUI
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -16,7 +15,6 @@ import Tooltip from '@material-ui/core/Tooltip'
 import LocationOn from '@material-ui/icons/LocationOn';
 import EditIcon from '@material-ui/icons/Edit'
 import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
-
 //Redux
 import { connect } from 'react-redux';
 import { logoutUser, uploadImage } from "../redux/actions/userAction";
@@ -76,7 +74,7 @@ class Profile extends Component {
                     </div>
                     <Tooltip title="Logout" placement="top">
                         <IconButton onClick={this.handleLogout}>
-                            <KeyboardReturn color="primary"/>
+                            <KeyboardReturn color="secondary"/>
                         </IconButton>
                     </Tooltip>
                     <EditDetails/>

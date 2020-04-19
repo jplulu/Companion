@@ -10,7 +10,7 @@ import axios from 'axios'
 import {Provider} from 'react-redux'
 import store from './redux/store'
 import { SET_AUTHENTICATED } from "./redux/types";
-import { logoutUser, getUserData} from "./redux/actions/userAction";
+import {logoutUser, getUserData, getUserMatches} from "./redux/actions/userAction";
 // Components
 import NavigationBar from "./components/NavigationBar";
 import AuthRoute from './util/AuthRoute'
@@ -31,6 +31,7 @@ if(token) {
         store.dispatch({ type: SET_AUTHENTICATED });
         axios.defaults.headers.common['Authorization'] = token;
         store.dispatch(getUserData(decodedToken.sub));
+        store.dispatch(getUserMatches(decodedToken.sub));
     }
 }
 

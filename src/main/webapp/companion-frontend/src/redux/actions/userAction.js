@@ -4,7 +4,7 @@ import {
     CLEAR_ERRORS,
     LOADING_UI,
     SET_UNAUTHENTICATED,
-    LOADING_USER
+    LOADING_USER, LOADING_MATCHES, SET_MATCHES
 } from '../types';
 import axios from 'axios';
 
@@ -16,6 +16,7 @@ export const loginUser = (userData, history) => (dispatch) => {
             localStorage.setItem('jwtToken', jwtToken);
             axios.defaults.headers.common['Authorization'] = jwtToken;
             dispatch(getUserData(userData.username));
+            dispatch(getUserMatches(userData.username));
             dispatch({ type: CLEAR_ERRORS});
             history.push('/');
         })
@@ -61,6 +62,19 @@ export const getUserData = (username) => (dispatch) => {
             })
         })
         .catch(err => console.log(err))
+};
+
+export const getUserMatches = (username) => (dispatch) => {
+    dispatch({ type: LOADING_MATCHES });
+    const url = `http://localhost:8080/user/${username}/matches`;
+    axios.get(url)
+        .then(res => {
+            dispatch({
+                type: SET_MATCHES,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err.response))
 };
 
 export const uploadImage = (username, formData) => (dispatch) => {

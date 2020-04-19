@@ -38,6 +38,10 @@ export default {
             fontSize: '0.8rem',
             marginTop: 10
         },
+        homeTitle: {
+            float: 'none',
+            margin: '0 auto'
+        },
         loadSpinner: {
             position: 'absolute'
         },
