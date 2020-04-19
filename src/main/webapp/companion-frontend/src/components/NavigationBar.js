@@ -17,7 +17,7 @@ class NavigationBar extends Component {
                     {authenticated ? (
                         <Fragment>
                             <Button color="inherit" component={Link} to="/">Home</Button>
-                            <Button color="inherit" component={Link} to={`/user/${this.props.username}`}>My Profile</Button>
+                            <Button color="inherit" component={Link} to={`/users/${this.props.username}`}>My Profile</Button>
                         </Fragment>
                     ) : (
                         <Fragment>

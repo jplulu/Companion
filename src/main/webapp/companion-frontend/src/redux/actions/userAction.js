@@ -84,7 +84,7 @@ export const deleteMatch = (curUsername, idToDelete) => (dispatch) => {
             dispatch({ type: DELETE_MATCH, payload: idToDelete })
         })
         .catch(err => console.log(err.response));
-}
+};
 
 export const uploadImage = (username, formData) => (dispatch) => {
     dispatch({ type: LOADING_USER });
