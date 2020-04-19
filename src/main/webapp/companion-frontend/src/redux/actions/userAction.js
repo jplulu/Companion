@@ -4,7 +4,7 @@ import {
     CLEAR_ERRORS,
     LOADING_UI,
     SET_UNAUTHENTICATED,
-    LOADING_USER, LOADING_MATCHES, SET_MATCHES
+    LOADING_USER, LOADING_MATCHES, SET_MATCHES, DELETE_MATCH
 } from '../types';
 import axios from 'axios';
 
@@ -75,6 +75,15 @@ export const getUserMatches = (username) => (dispatch) => {
             })
         })
         .catch(err => console.log(err.response))
+};
+
+export const deleteMatch = (curUsername, idToDelete) => (dispatch) => {
+    const url = `http://localhost:8080/user/${curUsername}/matches?id=${idToDelete}&status=refuse`;
+    axios.put(url)
+        .then(() => {
+            dispatch({ type: DELETE_MATCH, payload: idToDelete })
+        })
+        .catch(err => console.log(err.response));
 };
 
 export const uploadImage = (username, formData) => (dispatch) => {
