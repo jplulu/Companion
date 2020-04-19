@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import axios from 'axios';
 import StaticProfile from '../components/StaticProfile'
-
 import Typography from "@material-ui/core/Typography";
-import Profile from "../components/Profile";
 
 class user extends Component {
     state = {
