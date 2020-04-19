@@ -26,7 +26,7 @@ const styles = {
 class Match extends Component {
     render() {
         const { classes, match : {username, profile: {firstName, lastName, age, bio, location, profilePic}}} = this.props;
-        const imageURL = profilePic[0] ? `http://localhost:8080/picture?id=${profilePic[0].id}` : undefined;
+        const imageURL = profilePic[0] ? `http://localhost:8080/picture?id=${profilePic[profilePic.length - 1].id}` : undefined;
         return (
             <Card className={classes.card}>
                 <CardMedia

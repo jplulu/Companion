@@ -2,15 +2,15 @@ import React, {Component} from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
-import axios from'axios';
-
 // MUI
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+// Redux
+import { connect } from 'react-redux'
+import {loginUser} from "../redux/actions/userAction";
 
 const styles = (theme) => ({
     ...theme.spreadThis
@@ -23,10 +23,15 @@ class login extends Component {
         this.state = {
             username: '',
             password: '',
-            loading: false,
             errors: {}
         }
     };
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps.UI.errors) {
+            this.setState({ errors : { general: nextProps.UI.errors.message }});
+        }
+    }
 
     validateForm = () => {
         let isError = false;
@@ -56,31 +61,11 @@ class login extends Component {
         });
         const isError = this.validateForm();
         if(!isError) {
-            this.setState({
-                loading: true
-            });
             const userData = {
                 username: this.state.username,
                 password: this.state.password
             };
-            console.log(userData);
-            axios.post('http://localhost:8080/authenticate', userData)
-                .then(res => {
-                    localStorage.setItem('jwtToken', `Bearer ${res.data.jwt}`);
-                    this.setState({
-                        loading: false
-                    });
-                    this.props.history.push('/');
-                })
-                .catch(err => {
-                    console.log(err.response);
-                    this.setState({
-                        errors: {
-                            general: err.response.data.message
-                        },
-                        loading: false
-                    })
-                });
+            this.props.loginUser(userData, this.props.history)
         }
     };
 
@@ -91,8 +76,8 @@ class login extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state;
+        const { classes, UI: { loading } } = this.props;
+        const { errors } = this.state;
         return(
             <Grid container className={classes.form}>
                 <Grid item sm/>
@@ -127,8 +112,19 @@ class login extends Component {
 }
 
 login.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired
 };
 
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
 
-export default withStyles(styles)(login);
+const mapActionsToProps = {
+    loginUser
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(login));
