@@ -12,9 +12,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios.post('http://localhost:8080/authenticate', userData)
         .then(res => {
-            const jwtToken = `Bearer ${res.data.jwt}`;
-            localStorage.setItem('jwtToken', jwtToken);
-            axios.defaults.headers.common['Authorization'] = jwtToken;
+            setAuthorizationHeader(res.data.jwt);
             dispatch(getUserData(userData.username));
             dispatch(getUserMatches(userData.username));
             dispatch({ type: CLEAR_ERRORS});

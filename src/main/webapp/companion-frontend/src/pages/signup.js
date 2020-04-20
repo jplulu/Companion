@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
@@ -11,6 +11,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // Redux
 import { connect } from 'react-redux'
 import { signupUser } from "../redux/actions/userAction";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = (theme) => ({
     ...theme.spreadThis
@@ -24,6 +26,14 @@ class signup extends Component {
             username: '',
             password: '',
             confirmPassword: '',
+
+            firstName: '',
+            lastName: '',
+            bio: '',
+            location: '',
+            age: '',
+            gender: '',
+
             errors: {}
         }
     };
@@ -35,25 +45,26 @@ class signup extends Component {
     }
 
     validateForm = () => {
+        const {username, password, confirmPassword} = this.state;
         let isError = false;
         const err = {};
-        if(this.state.username === "") {
+        if(username === "") {
             isError = true;
             err.username = "Must not be empty";
         }
-        else if(this.state.username.length < 5) {
+        else if(username.length < 5) {
             isError = true;
             err.username = "Needs to be at least 5 characters long";
         }
-        if(this.state.password === "") {
+        if(password === "") {
             isError = true;
             err.password = "Must not be empty";
         }
-        else if(this.state.password.length < 5) {
+        else if(password.length < 5) {
             isError = true;
             err.password = "Needs to be at least 5 characters long";
         }
-        if(this.state.password !== this.state.confirmPassword) {
+        if(password !== confirmPassword) {
             isError = true;
             err.confirmPassword = "Passwords do not match "
         }
@@ -67,16 +78,13 @@ class signup extends Component {
         return isError
     };
 
-    handleSubmit = (e) => {
+    handleCredentialsSubmit = (e) => {
         e.preventDefault();
         this.setState({
             errors: {}
         });
         const isError = this.validateForm();
         if(!isError) {
-            this.setState({
-                loading: true
-            });
             const newUserData = {
                 username: this.state.username,
                 password: this.state.password
@@ -93,13 +101,13 @@ class signup extends Component {
 
     render() {
         const { classes, UI: { loading } } = this.props;
-        const { errors } = this.state;
-        return(
+        const { errors, page } = this.state;
+        return (
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
                     <Typography variant="h2" className={classes.pageTitle}>Create Account</Typography>
-                    <form noValidate onSubmit={this.handleSubmit}>
+                    <form noValidate onSubmit={this.handleCredentialsSubmit}>
                         <TextField id="username" name="username" type="username" label="Username"
                                    className={classes.textField}
                                    helperText={errors.username} error={!!errors.username} value={this.state.username}
@@ -118,7 +126,7 @@ class signup extends Component {
                                 {errors.general}
                             </Typography>
                         )}
-                        <Button type="submit" variant="contained" color="primary" className={classes.button} disabled={loading}>
+                        <Button type="submit" variant="contained" color="primary" className={classes.button} disabled={loading} >
                             Sign up
                             {loading && (
                                 <CircularProgress size={30} className={classes.loadSpinner}/>

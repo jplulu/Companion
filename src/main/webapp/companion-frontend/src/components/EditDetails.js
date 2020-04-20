@@ -103,7 +103,7 @@ class EditDetails extends Component {
                                 value={this.state.firstName}
                                 onChange={this.handleChange}
                                 fullWidth
-                                />
+                            />
                             <TextField
                                 name="lastName"
                                 type="text"
