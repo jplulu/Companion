@@ -80,6 +80,7 @@ class signup extends Component {
         }
 
         this.setState({
+            ...this.state,
             errors: {
                 ...err
             }
@@ -91,6 +92,7 @@ class signup extends Component {
     handleCredentialSubmit = (e) => {
         e.preventDefault();
         this.setState({
+            ...this.state,
             errors: {}
         });
         const isError = this.validateCredentialForm();
@@ -141,6 +143,7 @@ class signup extends Component {
         }
 
         this.setState({
+            ...this.state,
             errors: {
                 ...err
             }
@@ -152,6 +155,7 @@ class signup extends Component {
     handleProfileSubmit= (e) => {
         e.preventDefault();
         this.setState({
+            ...this.state,
             errors: {}
         });
         const isError = this.validateProfileForm();
@@ -164,6 +168,7 @@ class signup extends Component {
                 location: this.state.location,
                 bio: this.state.bio
             };
+            console.log(this.state)
         }
     };
 
@@ -231,7 +236,9 @@ class signup extends Component {
                             <TextField id="age" name="age" type="number" label="Age"
                                        className={classes.textField}
                                        helperText={errors.age} error={!!errors.age} value={this.state.age}
-                                       onChange={this.handleChange} fullWidth required autoComplete='off'/>
+                                       onChange={this.handleChange}
+                                       onKeyDown={ (e) => (e.key === 'e' || e.key === '+' || e.key ==='-') && e.preventDefault() }
+                                       fullWidth required autoComplete='off'/>
                             <Grid item>
                                <FormControl error={!!errors.gender}>
                                    <FormLabel component="legend">Gender *</FormLabel>

@@ -33,7 +33,6 @@ export const signupUser = (newUserData, history) => (dispatch) => {
             setAuthorizationHeader(res.data.jwt);
             dispatch(getUserData(newUserData.username));
             dispatch({ type: CLEAR_ERRORS });
-            //history.push('/');
         })
         .catch(err => {
             dispatch({
@@ -42,6 +41,16 @@ export const signupUser = (newUserData, history) => (dispatch) => {
             })
         });
 };
+
+// export const setupUserProfile = (username, newUserProfile) => (dispatch) => {
+//     dispatch({ type: LOADING_USER });
+//     const url = `http://localhost:8080/user/${username}/profile`;
+//     axios.put(url, userDetails)
+//         .then(() => {
+//             dispatch(getUserData(username));
+//         })
+//         .catch(err => console.log(err));
+// };
 
 export const logoutUser = () => (dispatch) => {
     localStorage.removeItem('jwtToken');
