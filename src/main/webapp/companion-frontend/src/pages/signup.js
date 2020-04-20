@@ -12,7 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 // Redux
 import { connect } from 'react-redux'
-import { signupUser } from "../redux/actions/userAction";
+import {setupUserProfile, signupUser} from "../redux/actions/userAction";
 import {FormLabel} from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -39,7 +39,7 @@ class signup extends Component {
             bio: '',
             location: '',
 
-            page: 'PROFILE',
+            page: 'CREDENTIAL',
             errors: {}
         }
     };
@@ -50,6 +50,13 @@ class signup extends Component {
                 ...this.state,
                 page: 'CREDENTIAL',
                 errors: {general: nextProps.UI.errors.message}
+            });
+        }
+        if(nextProps.user.authenticated) {
+            this.setState({
+                ...this.state,
+                page: 'PROFILE',
+                errors: {}
             });
         }
     }
@@ -70,9 +77,9 @@ class signup extends Component {
             isError = true;
             err.password = "Must not be empty";
         }
-        else if(password.length < 5) {
+        else if(password.length < 8) {
             isError = true;
-            err.password = "Needs to be at least 5 characters long";
+            err.password = "Needs to be at least 8 characters long";
         }
         if(password !== confirmPassword) {
             isError = true;
@@ -101,13 +108,7 @@ class signup extends Component {
                 username: this.state.username,
                 password: this.state.password
             };
-            this.props.signupUser(newUserData, this.props.history);
-            if(!this.state.errors.general) {
-                this.setState({
-                    ...this.state,
-                    page: 'PROFILE'
-                })
-            }
+            this.props.signupUser(newUserData);
         }
     };
 
@@ -168,7 +169,7 @@ class signup extends Component {
                 location: this.state.location,
                 bio: this.state.bio
             };
-            console.log(this.state)
+            this.props.setupUserProfile(this.props.user.username, newUserProfile, this.props.history);
         }
     };
 
@@ -279,6 +280,7 @@ class signup extends Component {
 signup.propTypes = {
     classes: PropTypes.object.isRequired,
     signupUser: PropTypes.func.isRequired,
+    setupUserProfile: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     UI: PropTypes.object.isRequired
 };
@@ -291,6 +293,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
     signupUser,
+    setupUserProfile
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(signup));
