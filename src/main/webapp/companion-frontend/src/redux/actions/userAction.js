@@ -32,8 +32,8 @@ export const signupUser = (newUserData, history) => (dispatch) => {
         .then(res => {
             setAuthorizationHeader(res.data.jwt);
             dispatch(getUserData(newUserData.username));
-            dispatch({ type: CLEAR_ERRORS});
-            history.push('/');
+            dispatch({ type: CLEAR_ERRORS });
+            //history.push('/');
         })
         .catch(err => {
             dispatch({
