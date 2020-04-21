@@ -17,10 +17,11 @@ class surveyPage extends Component{
             genderPreference: "None",
             questions: ["sport","food","music","hobby","personalityType","likesAnimals"],
             options:[["Basketball","Swimming","Football","Knitting","Dancing"],[],[],[],[],[]],
-            answers: [[1,0,1,1],[],[],[],null,null]
+            answers: [[false,true,true,true,false],[],[],[],null,null],
+            quack: false
         }
         this.handleChangeSelect = this.handleChangeSelect.bind(this)
-
+        this.handleChangeCheck = this.handleChangeCheck(this)
     }
 
     componentDidMount() {
@@ -64,10 +65,37 @@ class surveyPage extends Component{
         })
     }
 
+    handleChangeCheck(event) {
+        const {name, type, checked} = event.target
+        this.setState({
+            [name]: checked
+        })
+    }
 
-    render(){
+
+            render(){
         return(
             <div>
+
+                    <input
+                        type="checkbox"
+                        name = "quack"
+                        onChange = {this.handleChangeCheck}
+                        checked={this.state.quack}
+
+                    /> {this.state.answers[0][0]}
+                    <br/>
+
+
+
+
+
+
+
+
+
+
+
 
                 Please select what gender individuals you would be interested in matching with:
                 <br/>

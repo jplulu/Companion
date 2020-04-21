@@ -1,59 +1,69 @@
 import React, {Component} from "react";
 import SurveyQuestion from "../components/SurveyQuestion";
+import EditDetails from "../components/EditDetails"
+import user from "./user"
+import axios from 'axios';
+import StaticProfile from '../components/StaticProfile'
+import Typography from "@material-ui/core/Typography";
 
-class survey extends Component{
-    constructor(props){
+class survey extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-                loading: false,
-                question1: "Quack",
-                genderPreference: "None"
+            userData: 'Hello',
+            userProfile: 'Hello',
+            loading: false,
+            errors: {},
+            genderPreference: "None",
+            questions: ["sport", "food", "music", "hobby", "personalityType", "likesAnimals"],
+            options: [["Basketball", "Swimming", "Football", "Knitting", "Dancing"], [], [], [], [], []],
+            answers: [[false, true, true, true, false], [], [], [], null, null],
+            quack: false,
+            isLactoseFree: false,
+            testing: {
+                Sammy: false,
+                Baking: false
+            }
         }
-        this.handleChange = this.handleChange.bind(this)
+        this.handleChangeSelect = this.handleChangeSelect.bind(this)
     }
 
-    handleChange(event){
-        const {name, value, type} = event.target
+    handleChangeSelect(event) {
+        const{name,value,type,checked}=event.target
         this.setState({
-            [name]: value
+            [name]: checked
         })
     }
 
     render(){
         return(
             <div>
-
-                Please select what gender individuals you would be interested in matching with:
+                <label>
+                    <input
+                        type="checkbox"
+                        name="isLactoseFree"
+                        onChange={this.handleChangeSelect}
+                        checked={this.state.isLactoseFree}
+                    /> Lactose Free?
+                </label>
                 <br/>
-                <select
-                    value = {this.state.genderPreference}
-                    name = "genderPreference"
-                    onChange = {this.handleChange}
-                >
-                    <option value="">-- Please Choose a preference --</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="none">No Preference</option>
+                {this.state.isLactoseFree ? "Lactose Free Bois" : "Shit bruh"}
 
-                </select>
-
-                <SurveyQuestion
-                    default = "-- Please Select an Option --"
-                    question = "What is your gender preference?"
-                    options = {["male","female","no preference"]}
-                />
-
-                <SurveyQuestion
-                    default = "-- Please Select an Option --"
-                    question = "What age range are you interested in meeting?"
-                    options = {["Basketball","Swimming","Football","Knitting","Dancing"]}
-                />
-
+                <br/>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="testing.Sammy"
+                        onChange={this.handleChangeSelect}
+                        checked={this.state.testing.Sammy}
+                    /> Sammy?
+                    <br/>
+                    {this.state.testing.Sammy ? "Lactose Free Bois" : "Shit bruh"}
+                </label>
             </div>
+
         )
     }
-
-
 }
 
-export default survey
+    export default survey
