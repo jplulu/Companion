@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 const AuthRoute = ({ component: Component, authenticated, ...rest }) => (
     <Route
         {...rest}
-        render={(props) => authenticated === true ? <Redirect to='/'/> : <Component {...props}/>}
+        render={(props) => authenticated === true  ? <Redirect to='/'/> : <Component {...props}/>}
         />
 );
 
@@ -15,7 +15,7 @@ AuthRoute.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-       authenticated: state.user.authenticated
+    authenticated: state.user.authenticated,
 });
 
 export default connect(mapStateToProps)(AuthRoute);

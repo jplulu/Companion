@@ -28,7 +28,7 @@ const StaticProfile = (props) => {
                 <div className="profile-details">
                     <Typography variant="h5" color="primary">{firstName} {lastName}</Typography>
                     <hr />
-                    <Typography variant="body2">{gender === 1 ? "Male" : "Female"}, {`${age} years old`}</Typography>
+                    <Typography variant="body2">{gender === 0 ? '' : gender === 1 ? "Male," : "Female,"} {age > 0 ? `${age} years old` : ''}</Typography>
                     <hr/>
                     {bio && <Typography variant="h6">{bio}</Typography>}
                     <hr />

@@ -42,7 +42,7 @@ class Profile extends Component {
     };
 
     render() {
-        const {classes, user: {authenticated, loading, id, username, profile: {firstName, lastName, age, gender, location, bio, profilePic}}} = this.props;
+        const {classes, user: {authenticated, loading, username, profile: {firstName, location, bio, profilePic}}} = this.props;
         const imageURL = (profilePic && profilePic.length) ? `http://localhost:8080/picture?id=${profilePic[profilePic.length-1].id}` : undefined;
 
         let profileMarkup = !loading ? (authenticated ? (

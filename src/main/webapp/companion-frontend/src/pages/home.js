@@ -20,7 +20,7 @@ class home extends Component {
         if(authenticated) {
             let recentMatchesMarkup = !loadingMatches ? ((matches && matches.length) ? (
                 matches.map(match => <Match key={match.id} curUsername={username} match={match}/>)
-            ) : <h2>No Matches Found</h2>) : (
+            ) : <h2>No Matches Found. Try editing your profile or doing the survey</h2>) : (
                 <p>Loading...</p>
             );
             return (
@@ -29,6 +29,10 @@ class home extends Component {
                         <Profile/>
                     </Grid>
                     <Grid item sm={8} xs={12}>
+                        <Typography variant="h4" color="primary" align="center">
+                            Your matches
+                        </Typography>
+                        <br/>
                         {recentMatchesMarkup}
                     </Grid>
                 </Grid>
