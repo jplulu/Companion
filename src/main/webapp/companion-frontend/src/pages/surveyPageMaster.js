@@ -61,7 +61,7 @@ class surveyPageMaster extends Component {
             maxAge: null,
             minAge: null,
             maxDistance: null,
-            surveyAnswers: {sport: [], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
+            surveyAnswers: {sport: [1,5,3,6,5,4,6,4,3,,2,4,6,6,7,3], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
         }
 
 
@@ -70,6 +70,7 @@ class surveyPageMaster extends Component {
         this.handleCheckFood = this.handleCheckFood.bind(this)
         this.handleCheckHobby = this.handleCheckHobby.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleClick = this.handleClick.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -103,7 +104,9 @@ class surveyPageMaster extends Component {
         let sportExpress = sportTent.filter(el => {
             return el !== undefined;
         })
-        this.setState({sportsAnswers: sportExpress})    }
+        this.setState({sportsAnswers: sportExpress})
+
+    }
 
     handleCheckMusic = (event) => {
         let options = this.state.music
@@ -176,13 +179,22 @@ class surveyPageMaster extends Component {
         })
     }
 
-    onChange(e) {
-        const { surveyAnswers } = {...this.state };
-        const currentState = surveyAnswers;
-        const {name, value} = e.target;
-        currentState[name] = value;
+    handleClick() {
+        let ANSWERS = this.state.surveyAnswers
 
-        this.setState({ surveyAnswers: currentState })
+        for (const property in ANSWERS){
+            if (property === "sport")               ANSWERS[property] = this.state.sportsAnswers
+            else if(property === "food")            ANSWERS[property] = this.state.foodAnswers
+            else if(property === "music")           ANSWERS[property] = this.state.musicAnswers
+            else if(property === "hobby")           ANSWERS[property] = this.state.hobbyAnswers
+            else if(property === "personalityType") ANSWERS[property] = this.state.personalityAnswer
+            else if(property === "likesAnimals")    ANSWERS[property] = this.state.animalAnswer
+            else if(property === "genderPreference")ANSWERS[property] = this.state.genderPreference
+            else if(property === "maxAge")          ANSWERS[property] = this.state.maxAge
+            else if(property === "minAge")          ANSWERS[property] = this.state.minAge
+            else if(property === "maxDistance")     ANSWERS[property] = this.state.maxDistance
+        }
+        this.setState({ surveyAnswers: ANSWERS })
     }
 
     handleSubmit(event) {
@@ -190,12 +202,14 @@ class surveyPageMaster extends Component {
         event.preventDefault();
     }
 
+
+
     render() {
         return (
             <div className="App">
                 <form onSubmit={this.handleSubmit}>
                 <div>
-                    <h2> What type of friends are you looking for></h2>
+                    <h2> What type of friends are you looking for?</h2>
                     <label>
                         <input
                             type="radio"
@@ -268,6 +282,7 @@ class surveyPageMaster extends Component {
                     </ul>
                     <br/>You like these types of sports: {this.state.sportsAnswers}
                     <br/>{this.state.sportsAnswers.length}
+                    <br/>{this.state.surveyAnswers.sport}
                     <hr/>
                 </div>
 
@@ -363,9 +378,13 @@ class surveyPageMaster extends Component {
 
                 <input type="submit" value="Submit" />
                 <br/>
-                    <br/>
-                    <br/>
-                    <br/>
+                <button onClick={this.handleClick}>LETS HOPE FOR THE EBST</button>
+                    <br/> SPORTS: {this.state.surveyAnswers.sport}
+                    <br/> Food: {this.state.surveyAnswers.food}
+                    <br/> Music: {this.state.surveyAnswers.music}
+                    <br/> Hobby: {this.state.surveyAnswers.hobby}
+                    <br/> Pers Type: {this.state.surveyAnswers.personalityType}
+                    <br/> Likes Animals: {this.state.surveyAnswers.likesAnimals}
                 </form>
             </div>
         );
