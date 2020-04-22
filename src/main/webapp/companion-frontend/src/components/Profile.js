@@ -58,6 +58,8 @@ class Profile extends Component {
                         </Tooltip>
                     </div>
                     <hr/>
+
+                    {/* This is where the default home page for a user is defined */}
                     <div className="profile-details">
                         <MuiLink component={Link} to={`/users/${username}`} color="primary" variant="h5">
                             {firstName}
@@ -72,6 +74,7 @@ class Profile extends Component {
                             </Fragment>
                         )}
                     </div>
+
                     <Tooltip title="Logout" placement="top">
                         <IconButton onClick={this.handleLogout}>
                             <KeyboardReturn color="secondary"/>

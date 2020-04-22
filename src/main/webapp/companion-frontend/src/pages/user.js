@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import axios from 'axios';
 import StaticProfile from '../components/StaticProfile'
 import Typography from "@material-ui/core/Typography";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 class user extends Component {
     state = {
@@ -49,7 +51,13 @@ class user extends Component {
         if(!this.state.loading) {
             if(this.state.userData) {
                 return (
+                    <div>
                     <StaticProfile userData={this.state.userData}/>
+
+                        <Button
+                            color="inherit" component={Link} to={`/users/${this.state.userData.username}/survey`}>UPDATE YOUR SURVEY RESPONSES
+                        </Button>
+                    </div>
                 );
             } else {
                 return (
