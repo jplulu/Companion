@@ -51,17 +51,17 @@ class surveyPageMaster extends Component {
                 {id: 10, value: "quarantining", name:"Quarantining", isChecked: false}
             ],
 
-            sportsAnswers: [8,4,7,5],
-            musicAnswers: [5,4,3,2,1,0],
-            foodAnswers: [5,4,3,2,1,0,1,2,3,4,5],
-            hobbyAnswers: [6,3,7,3],
+            sportsAnswers: [],
+            musicAnswers: [],
+            foodAnswers: [],
+            hobbyAnswers: [],
             personalityAnswer: 0,
-            animalAnswer: 0,
-            genderPreference: null,
+            animalAnswer: 2,
+            genderPreference: 3,
             maxAge: null,
             minAge: null,
             maxDistance: null,
-            surveyAnswers: {sport: [1,5,3,6,5,4,6,4,3,,2,4,6,6,7,3], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
+            surveyAnswers: {sport: [], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
         }
 
 
@@ -214,8 +214,8 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="genderPreference"
-                            value="male"
-                            checked={this.state.animalAnswer === "male"}
+                            value="1"
+                            checked={this.state.animalAnswer === "1"}
                             onChange={this.handleChange}
                         /> Male
                     </label>
@@ -226,8 +226,8 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="genderPreference"
-                            value="female"
-                            checked={this.state.genderPreference === "female"}
+                            value="2"
+                            checked={this.state.genderPreference === "2"}
                             onChange={this.handleChange}
                         /> Female
                     </label>
@@ -237,8 +237,8 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="genderPreference"
-                            value="no preference"
-                            checked={this.state.genderPreference === "no preference"}
+                            value="3"
+                            checked={this.state.genderPreference === "3"}
                             onChange={this.handleChange}
                         /> No preference
 
@@ -328,8 +328,8 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="personalityAnswer"
-                            value="extroverted"
-                            checked={this.state.personalityAnswer === "extroverted"}
+                            value="1"
+                            checked={this.state.personalityAnswer === "1"}
                             onChange={this.handleChange}
                         /> Extroverted
                     </label>
@@ -340,10 +340,21 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="personalityAnswer"
-                            value="introverted"
-                            checked={this.state.personalityAnswer === "introverted"}
+                            value="2"
+                            checked={this.state.personalityAnswer === "2"}
                             onChange={this.handleChange}
                         /> Introverted
+                    </label>
+                    <br />
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="personalityAnswer"
+                            value="0"
+                            checked={this.state.personalityAnswer === "0"}
+                            onChange={this.handleChange}
+                        /> Don't know
                     </label>
                     <p>You are: {this.state.personalityAnswer}</p>
                     <hr/>
@@ -355,10 +366,10 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="animalAnswer"
-                            value="yes"
-                            checked={this.state.animalAnswer === "yes"}
+                            value="1"
+                            checked={this.state.animalAnswer === "1"}
                             onChange={this.handleChange}
-                        /> yes
+                        /> Yes
                     </label>
 
                     <br />
@@ -367,10 +378,10 @@ class surveyPageMaster extends Component {
                         <input
                             type="radio"
                             name="animalAnswer"
-                            value="no"
-                            checked={this.state.animalAnswer === "no"}
+                            value="2"
+                            checked={this.state.animalAnswer === "2"}
                             onChange={this.handleChange}
-                        /> no
+                        /> No
                     </label>
                     <p>You are: {this.state.animalAnswer}</p>
                     <hr/>
