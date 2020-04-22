@@ -52,7 +52,7 @@ class signup extends Component {
                 errors: {general: nextProps.UI.errors.message}
             });
         }
-        if(nextProps.user.authenticated) {
+        if(!this.props.user.authenticated && nextProps.user.authenticated) {
             this.setState({
                 ...this.state,
                 page: 'PROFILE',

@@ -29,6 +29,10 @@ class home extends Component {
                         <Profile/>
                     </Grid>
                     <Grid item sm={8} xs={12}>
+                        <Typography variant="h4" color="primary" align="center">
+                            Your matches
+                        </Typography>
+                        <br/>
                         {recentMatchesMarkup}
                     </Grid>
                 </Grid>
