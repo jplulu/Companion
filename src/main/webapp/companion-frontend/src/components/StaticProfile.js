@@ -38,6 +38,7 @@ const StaticProfile = (props) => {
                             <hr />
                         </Fragment>
                     )}
+                    {/*Including a button to allow you to update your profile*/}
                 </div>
             </div>
         </Paper>

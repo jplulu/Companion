@@ -49,7 +49,9 @@ class user extends Component {
         if(!this.state.loading) {
             if(this.state.userData) {
                 return (
+                    <div>
                     <StaticProfile userData={this.state.userData}/>
+                    </div>
                 );
             } else {
                 return (

@@ -48,7 +48,27 @@ export const setupUserProfile = (username, userDetails, history) => (dispatch) =
     axios.put(url, userDetails)
         .then(() => {
             dispatch(getUserData(username));
-            history.push('/')
+            history.push('/survey')
+        })
+        .catch(err => console.log(err));
+};
+
+export const setupUserSurvey = (username, surveyResults, history) => (dispatch) => {
+    dispatch({type: LOADING_UI});
+    const url = `http://localhost:8080/user/${username}/survey`;
+    axios.put(url, surveyResults)
+        .then(() => {
+            dispatch({ type: LOADING_MATCHES });
+            const url2 = `http://localhost:8080/user/${username}/matches`;
+            axios.get(url2)
+                .then(res => {
+                    dispatch({
+                        type: SET_MATCHES,
+                        payload: res.data
+                    });
+                    history.push('/');
+                })
+                .catch(err => console.log(err.response))
         })
         .catch(err => console.log(err));
 };
