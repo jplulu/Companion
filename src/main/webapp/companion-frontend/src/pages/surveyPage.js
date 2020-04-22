@@ -5,11 +5,54 @@ import user from "./user"
 import axios from 'axios';
 import StaticProfile from '../components/StaticProfile'
 import Typography from "@material-ui/core/Typography";
+import surveyCheckBox from '../components/survey/surveyCheckBox'
 
-class surveyPage extends Component{
-    constructor(props){
+
+class surveyPage extends Component {
+    constructor(props) {
         super(props);
         this.state = {
+            questions: ["Which of the following sports do you enjoy playing?",
+                "Which genres of music do you enjoy listening too?",
+                "What types of food do you love?",
+                "What hobbies are you interested in?",
+                "How would you describe your personality type?",
+                "Do you consider yourself an animal lover?"],
+            options: {
+                sports: [
+                    {id: 1, value: "basketball", name: "Basketball", isChecked: false},
+                    {id: 2, value: "football", name: "Football", isChecked: false},
+                    {id: 3, value: "baseball", name: "Baseball", isChecked: false},
+                    {id: 4, value: "volleyball", name: "Volleyball", isChecked: false}
+                ],
+                music: [
+                    {id: 1, value: "rock", name: "Rock", isChecked: false},
+                    {id: 2, value: "pop", name: "Pop", isChecked: false},
+                    {id: 3, value: "country", name: "Country", isChecked: false},
+                    {id: 4, value: "r&b/soul", name: "R&B/Soul", isChecked: false},
+                    {id: 5, value: "hiphop", name: "HipHop", isChecked: false},
+                    {id: 6, value: "easylistening", name: "Easy Listening", isChecked: false},
+                    {id: 7, value: "electronic/dance", name: "Electronic/Dance", isChecked: false}
+                ]
+            },
+
+            answers: {
+                sports: [],
+                music: []
+            }
+        }
+    }
+
+    render() {
+        return(
+            <div>
+                <surveyCheckBox question={this.state.questions[0]} options={this.state.options.sports} answers={this.state.answers.sports} />
+                <p>This is on main page</p>
+            </div>
+        )
+    }
+}
+            /*
             userData: 'Hello',
             userProfile: 'Hello',
             loading:false,
@@ -19,6 +62,7 @@ class surveyPage extends Component{
             options:[["Basketball","Swimming","Football","Knitting","Dancing"],[],[],[],[],[]],
             answers: [[false,true,true,true,false],[],[],[],null,null],
             quack: false
+
         }
         this.handleChangeSelect = this.handleChangeSelect.bind(this)
         this.handleChangeCheck = this.handleChangeCheck(this)
@@ -128,9 +172,9 @@ class surveyPage extends Component{
                 />
                 <hr/>
 
-                {/*---------------------------------------------------------------------------------------------*/}
+                {/*---------------------------------------------------------------------------------------------*/
 
-
+/*
                 <SurveyQuestion
                     type = "check"
                     question = "What sports do you like?"
@@ -142,8 +186,8 @@ class surveyPage extends Component{
                 <hr/>
                 {this.state.answers[0][0]}
 
-                {/*---------------------------------------------------------------------------------------------*/}
-
+                {/*---------------------------------------------------------------------------------------------*/
+/*
                 <hr/>
                 HELLO WORLD
                 <hr/>
@@ -160,5 +204,5 @@ class surveyPage extends Component{
 
 
 }
-
+*/
 export default surveyPage

@@ -20,6 +20,17 @@ class SurveyMusic extends Component {
         this.handleCheck = this.handleCheck.bind(this)
     }
 
+    /* Write this function to fetch the user and the specific user music answers */
+    componentDidMount() {
+
+    }
+
+    componentDidUpdate() {
+        if (this.props.onChange) {
+            this.props.onChange(this.state);
+        }
+    }
+
     handleCheck = (event) => {
         let options = this.state.music
         options.forEach(option => {
@@ -37,7 +48,7 @@ class SurveyMusic extends Component {
             }
         )
         let musicExpress = musicTent.filter(el => {
-            return el != 0;
+            return el !== undefined;
         })
         this.setState({musicAnswers: musicExpress})    }
 
@@ -56,7 +67,6 @@ class SurveyMusic extends Component {
 
                 <br/>{this.state.musicAnswers}
                 <br/>{this.state.musicAnswers.length}
-
 
             </div>
         );

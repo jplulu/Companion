@@ -53,7 +53,7 @@ class user extends Component {
                 return (
                     <div>
                     <StaticProfile userData={this.state.userData}/>
-                        {this.state.userData.username}
+
                         <Button
                             color="inherit" component={Link} to={`/users/${this.state.userData.username}/survey`}>UPDATE YOUR SURVEY RESPONSES
                         </Button>
