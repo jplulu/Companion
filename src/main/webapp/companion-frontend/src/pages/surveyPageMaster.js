@@ -62,7 +62,7 @@ class surveyPageMaster extends Component {
             minAge: null,
             maxDistance: null,
             surveyAnswers: {sport: [], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
-        }
+        };
 
 
         this.handleCheckSports = this.handleCheckSports.bind(this)
@@ -70,8 +70,6 @@ class surveyPageMaster extends Component {
         this.handleCheckFood = this.handleCheckFood.bind(this)
         this.handleCheckHobby = this.handleCheckHobby.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleClick = this.handleClick.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     /* Write this function to fetch the user and the specific user music answers */
@@ -173,41 +171,36 @@ class surveyPageMaster extends Component {
     }
 
     handleChange(event) {
-        const {name, value} = event.target
+        const {name, value} = event.target;
         this.setState({
             [name]: value
         })
     }
 
-    handleClick() {
-        let ANSWERS = this.state.surveyAnswers
+    handleSubmit = (e) => {
+        e.preventDefault();
+        let ANSWERS = this.state.surveyAnswers;
 
         for (const property in ANSWERS){
-            if (property === "sport")               ANSWERS[property] = this.state.sportsAnswers
-            else if(property === "food")            ANSWERS[property] = this.state.foodAnswers
-            else if(property === "music")           ANSWERS[property] = this.state.musicAnswers
-            else if(property === "hobby")           ANSWERS[property] = this.state.hobbyAnswers
-            else if(property === "personalityType") ANSWERS[property] = this.state.personalityAnswer
-            else if(property === "likesAnimals")    ANSWERS[property] = this.state.animalAnswer
-            else if(property === "genderPreference")ANSWERS[property] = this.state.genderPreference
-            else if(property === "maxAge")          ANSWERS[property] = this.state.maxAge
-            else if(property === "minAge")          ANSWERS[property] = this.state.minAge
-            else if(property === "maxDistance")     ANSWERS[property] = this.state.maxDistance
+            if (property === "sport")               ANSWERS[property] = this.state.sportsAnswers;
+            else if(property === "food")            ANSWERS[property] = this.state.foodAnswers;
+            else if(property === "music")           ANSWERS[property] = this.state.musicAnswers;
+            else if(property === "hobby")           ANSWERS[property] = this.state.hobbyAnswers;
+            else if(property === "personalityType") ANSWERS[property] = parseInt(this.state.personalityAnswer);
+            else if(property === "likesAnimals")    ANSWERS[property] = parseInt(this.state.animalAnswer);
+            else if(property === "genderPreference")ANSWERS[property] = parseInt(this.state.genderPreference);
+            else if(property === "maxAge")          ANSWERS[property] = parseInt(this.state.maxAge);
+            else if(property === "minAge")          ANSWERS[property] = parseInt(this.state.minAge);
+            else if(property === "maxDistance")     ANSWERS[property] = parseInt(this.state.maxDistance)
         }
-        this.setState({ surveyAnswers: ANSWERS })
-    }
+        this.setState({ surveyAnswers: ANSWERS });
 
-    handleSubmit(event) {
-        this.setState()
-        event.preventDefault();
-    }
-
-
+    };
 
     render() {
         return (
             <div className="App">
-                <form onSubmit={this.handleSubmit}>
+                <form noValidate onSubmit={this.handleSubmit}>
                 <div>
                     <h2> What type of friends are you looking for?</h2>
                     <label>
@@ -215,7 +208,7 @@ class surveyPageMaster extends Component {
                             type="radio"
                             name="genderPreference"
                             value="1"
-                            checked={this.state.animalAnswer === "1"}
+                            checked={this.state.genderPreference === "1"}
                             onChange={this.handleChange}
                         /> Male
                     </label>
@@ -387,15 +380,8 @@ class surveyPageMaster extends Component {
                     <hr/>
                 </div>
 
-                <input type="submit" value="Submit" />
                 <br/>
-                <button onClick={this.handleClick}>LETS HOPE FOR THE EBST</button>
-                    <br/> SPORTS: {this.state.surveyAnswers.sport}
-                    <br/> Food: {this.state.surveyAnswers.food}
-                    <br/> Music: {this.state.surveyAnswers.music}
-                    <br/> Hobby: {this.state.surveyAnswers.hobby}
-                    <br/> Pers Type: {this.state.surveyAnswers.personalityType}
-                    <br/> Likes Animals: {this.state.surveyAnswers.likesAnimals}
+                <button type="submit">Submit</button>
                 </form>
             </div>
         );

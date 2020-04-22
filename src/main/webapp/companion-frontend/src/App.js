@@ -53,8 +53,7 @@ function App() {
                         <AuthRoute path="/login" exact component={login} />
                         <Route path="/signup" exact component={signup} />
                         <Route path="/users/:username" exact component={user}/>
-                        <Route path="/users/:username/survey" exact component={surveyPageMaster}/>
-                        <Route path="/survey" exact component={surveyPage2}/>
+                        <Route path="/survey" exact component={surveyPageMaster}/>
                     </Switch>
                 </div>
             </Router>
