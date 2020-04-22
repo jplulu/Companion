@@ -19,9 +19,6 @@ import home from './pages/home'
 import login from './pages/login'
 import signup from './pages/signup'
 import user from './pages/user'
-import survey from './pages/survey'
-import surveyPage from './pages/surveyPage'
-import surveyPage2 from './pages/surveyPage2'
 import surveyPageMaster from './pages/surveyPageMaster'
 
 

@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import  CheckBox  from '../components/CheckBox'
+import {setupUserSurvey} from "../redux/actions/userAction";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
 
 class surveyPageMaster extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             questions: ["Which of the following sports do you enjoy playing?",
                 "Which genres of music do you enjoy listening too?",
@@ -65,11 +68,11 @@ class surveyPageMaster extends Component {
         };
 
 
-        this.handleCheckSports = this.handleCheckSports.bind(this)
-        this.handleCheckMusic = this.handleCheckMusic.bind(this)
-        this.handleCheckFood = this.handleCheckFood.bind(this)
-        this.handleCheckHobby = this.handleCheckHobby.bind(this)
-        this.handleChange = this.handleChange.bind(this)
+        this.handleCheckSports = this.handleCheckSports.bind(this);
+        this.handleCheckMusic = this.handleCheckMusic.bind(this);
+        this.handleCheckFood = this.handleCheckFood.bind(this);
+        this.handleCheckHobby = this.handleCheckHobby.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     /* Write this function to fetch the user and the specific user music answers */
@@ -84,12 +87,12 @@ class surveyPageMaster extends Component {
     }
 
     handleCheckSports = (event) => {
-        let options = this.state.sports
+        let options = this.state.sports;
         options.forEach(option => {
             if (option.value === event.target.value)
                 option.isChecked =  event.target.checked
-        })
-        this.setState({sports: options})
+        });
+        this.setState({sports: options});
 
         this.setState({sportsAnswers: null});
         let sportTent = this.state.sports.map(option => {
@@ -98,21 +101,21 @@ class surveyPageMaster extends Component {
                         option.id
                     )
             }
-        )
+        );
         let sportExpress = sportTent.filter(el => {
             return el !== undefined;
-        })
+        });
         this.setState({sportsAnswers: sportExpress})
 
-    }
+    };
 
     handleCheckMusic = (event) => {
-        let options = this.state.music
+        let options = this.state.music;
         options.forEach(option => {
             if (option.value === event.target.value)
                 option.isChecked =  event.target.checked
-        })
-        this.setState({music: options})
+        });
+        this.setState({music: options});
 
         this.setState({musicAnswers: null});
         let musicTent = this.state.music.map(option => {
@@ -121,19 +124,19 @@ class surveyPageMaster extends Component {
                         option.id
                     )
             }
-        )
+        );
         let musicExpress = musicTent.filter(el => {
             return el !== undefined;
-        })
-        this.setState({musicAnswers: musicExpress})    }
+        });
+        this.setState({musicAnswers: musicExpress})};
 
     handleCheckFood = (event) => {
-        let options = this.state.food
+        let options = this.state.food;
         options.forEach(option => {
             if (option.value === event.target.value)
                 option.isChecked =  event.target.checked
-        })
-        this.setState({food: options})
+        });
+        this.setState({food: options});
 
         this.setState({foodAnswers: null});
         let foodTent = this.state.food.map(option => {
@@ -142,19 +145,19 @@ class surveyPageMaster extends Component {
                         option.id
                     )
             }
-        )
+        );
         let foodExpress = foodTent.filter(el => {
             return el !== undefined;
-        })
-        this.setState({foodAnswers: foodExpress})    }
+        });
+        this.setState({foodAnswers: foodExpress})};
 
     handleCheckHobby = (event) => {
-        let options = this.state.hobby
+        let options = this.state.hobby;
         options.forEach(option => {
             if (option.value === event.target.value)
                 option.isChecked =  event.target.checked
-        })
-        this.setState({hobby: options})
+        });
+        this.setState({hobby: options});
 
         this.setState({hobbyAnswers: null});
         let hobbyTent = this.state.hobby.map(option => {
@@ -163,12 +166,12 @@ class surveyPageMaster extends Component {
                         option.id
                     )
             }
-        )
+        );
         let hobbyExpress = hobbyTent.filter(el => {
             return el !== undefined;
-        })
+        });
         this.setState({hobbyAnswers: hobbyExpress})
-    }
+    };
 
     handleChange(event) {
         const {name, value} = event.target;
@@ -194,7 +197,8 @@ class surveyPageMaster extends Component {
             else if(property === "maxDistance")     ANSWERS[property] = parseInt(this.state.maxDistance)
         }
         this.setState({ surveyAnswers: ANSWERS });
-
+        console.log(this.state.surveyAnswers);
+        this.props.setupUserSurvey(this.props.user.username, this.state.surveyAnswers, this.props.history);
     };
 
     render() {
@@ -388,4 +392,19 @@ class surveyPageMaster extends Component {
     }
 }
 
-export default surveyPageMaster
+surveyPageMaster.propTypes = {
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired,
+    setupUserSurvey: PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
+
+const mapActionsToProps = {
+    setupUserSurvey
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(surveyPageMaster);

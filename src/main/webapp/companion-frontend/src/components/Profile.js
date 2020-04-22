@@ -80,6 +80,7 @@ class Profile extends Component {
                             <KeyboardReturn color="secondary"/>
                         </IconButton>
                     </Tooltip>
+                    <Button component={Link} to={`/survey`} style={{flex:1}} color="primary">Update Survey</Button>
                     <EditDetails/>
                 </div>
             </Paper>

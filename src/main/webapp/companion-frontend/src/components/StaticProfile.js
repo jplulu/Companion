@@ -6,8 +6,6 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import LocationOn from '@material-ui/icons/LocationOn';
 import noImage from "../images/no-img.png";
-import {Link} from "react-router-dom";
-import Button from "@material-ui/core/Button";
 
 const styles = (theme) => ({
     ...theme.spreadThis
@@ -41,7 +39,6 @@ const StaticProfile = (props) => {
                         </Fragment>
                     )}
                     {/*Including a button to allow you to update your profile*/}
-                    <Button  component={Link} to={`/users/username/survey`} style={{flex:1}}>UPDATE YOUR SURVEY RESPONSES</Button>
                 </div>
             </div>
         </Paper>

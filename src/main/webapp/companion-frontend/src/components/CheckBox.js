@@ -12,6 +12,6 @@ export const CheckBox = props => {
                 {props.name}
         </div>
     )
-}
+};
 
 export default CheckBox

@@ -17,7 +17,7 @@ import javax.persistence.EntityNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-public class HelloResource {
+public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
