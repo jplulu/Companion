@@ -22,6 +22,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -162,6 +164,36 @@ public class UserService {
             user.setMaxDistance(results.getMaxDistance());
         }
         userRepository.save(user);
+    }
+
+    public SurveyResultsDTO getSurvey(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            throw new EntityNotFoundException("User not found");
+        Set<Integer> sport = new HashSet<>();
+        Set<Integer> food = new HashSet<>();
+        Set<Integer> music = new HashSet<>();
+        Set<Integer> hobby = new HashSet<>();
+        List<SurveyResponse> sportTemp = surveyResponseRepository.findByQuestionAndUser(Question.SPORT, user);
+        for(SurveyResponse surveyResponse : sportTemp)
+            sport.add(surveyResponse.getChoice());
+        List<SurveyResponse> foodTemp = surveyResponseRepository.findByQuestionAndUser(Question.FOOD, user);
+        for(SurveyResponse surveyResponse : foodTemp)
+            food.add(surveyResponse.getChoice());
+        List<SurveyResponse> musicTemp = surveyResponseRepository.findByQuestionAndUser(Question.MUSIC, user);
+        for(SurveyResponse surveyResponse : musicTemp)
+            music.add(surveyResponse.getChoice());
+        List<SurveyResponse> hobbyTemp = surveyResponseRepository.findByQuestionAndUser(Question.HOBBY, user);
+        for(SurveyResponse surveyResponse : hobbyTemp)
+            hobby.add(surveyResponse.getChoice());
+        int personalityType = surveyResponseRepository.findByQuestionAndUser(Question.PERSONALITY, user).get(0).getChoice();
+        int likesAnimals = surveyResponseRepository.findByQuestionAndUser(Question.ANIMALS, user).get(0).getChoice();
+        int genderPreference = user.getGenderPref();
+        int maxAge = user.getMaxAge();
+        int minAge = user.getMinAge();
+        int maxDistance = user.getMaxDistance();
+
+        return new SurveyResultsDTO(sport, food, music, hobby, personalityType, likesAnimals, genderPreference, maxAge, minAge, maxDistance);
     }
 
     private double[] obtainCoordinates(String location) throws IOException {
