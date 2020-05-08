@@ -54,7 +54,6 @@ export const setupUserProfile = (username, userDetails, history) => (dispatch) =
 };
 
 export const setupUserSurvey = (username, surveyResults, history) => (dispatch) => {
-    dispatch({type: LOADING_UI});
     const url = `http://localhost:8080/user/${username}/survey`;
     axios.put(url, surveyResults)
         .then(() => {
