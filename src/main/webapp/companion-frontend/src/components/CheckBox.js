@@ -8,7 +8,6 @@ export const CheckBox = props => {
                 onClick={props.handleCheckChildElement}
                 type="checkbox" checked={props.isChecked}
                 value={props.value} />
-
                 {props.name}
         </div>
     )
