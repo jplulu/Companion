@@ -67,7 +67,6 @@ class surveyPageMaster extends Component {
             surveyAnswers: {sport: [], food: [], music: [], hobby: [], personalityType: null, likesAnimals: null, genderPreference: null, maxAge: null, minAge: null, maxDistance: null}
         };
 
-
         this.handleCheckSports = this.handleCheckSports.bind(this);
         this.handleCheckMusic = this.handleCheckMusic.bind(this);
         this.handleCheckFood = this.handleCheckFood.bind(this);
@@ -106,7 +105,6 @@ class surveyPageMaster extends Component {
             return el !== undefined;
         });
         this.setState({sportsAnswers: sportExpress})
-
     };
 
     handleCheckMusic = (event) => {
@@ -197,7 +195,6 @@ class surveyPageMaster extends Component {
             else if(property === "maxDistance")     ANSWERS[property] = parseInt(this.state.maxDistance)
         }
         this.setState({ surveyAnswers: ANSWERS });
-        console.log(this.state.surveyAnswers);
         this.props.setupUserSurvey(this.props.user.username, this.state.surveyAnswers, this.props.history);
     };
 
@@ -240,7 +237,6 @@ class surveyPageMaster extends Component {
                         /> No preference
 
                     </label>
-                    <p>You are looking for: {this.state.genderPreference}</p>
                 </div>
 
                 <div>
@@ -271,15 +267,12 @@ class surveyPageMaster extends Component {
                 </div>
 
                 <div>
-                    <h2> {this.state.questions[0]}</h2>
+                    <h2> {this.state.questions[0]} </h2>
                     <ul>
                         {this.state.sports.map(selection => {
                             return (<CheckBox handleCheckChildElement={this.handleCheckSports}  {...selection} />)})
                         }
                     </ul>
-                    <br/>You like these types of sports: {this.state.sportsAnswers}
-                    <br/>{this.state.sportsAnswers.length}
-                    <br/>{this.state.surveyAnswers.sport}
                     <hr/>
                 </div>
 
@@ -290,8 +283,6 @@ class surveyPageMaster extends Component {
                                 return (<CheckBox handleCheckChildElement={this.handleCheckMusic}  {...selection} />)})
                         }
                     </ul>
-                    <br/>You like these types of music: {this.state.musicAnswers}
-                    <br/>{this.state.musicAnswers.length}
                     <hr/>
                 </div>
 
@@ -302,8 +293,6 @@ class surveyPageMaster extends Component {
                             return (<CheckBox handleCheckChildElement={this.handleCheckFood}  {...selection} />)})
                         }
                     </ul>
-                    <br/>You like these types of food: {this.state.foodAnswers}
-                    <br/>{this.state.foodAnswers.length}
                     <hr/>
                 </div>
 
@@ -314,8 +303,6 @@ class surveyPageMaster extends Component {
                             return (<CheckBox handleCheckChildElement={this.handleCheckHobby}  {...selection} />)})
                         }
                     </ul>
-                    <br/>I enjoy these things: {this.state.hobbyAnswers}
-                    <br/>{this.state.hobbyAnswers.length}
                     <hr/>
                 </div>
 
@@ -353,7 +340,6 @@ class surveyPageMaster extends Component {
                             onChange={this.handleChange}
                         /> Don't know
                     </label>
-                    <p>You are: {this.state.personalityAnswer}</p>
                     <hr/>
                 </div>
 
@@ -380,7 +366,6 @@ class surveyPageMaster extends Component {
                             onChange={this.handleChange}
                         /> No
                     </label>
-                    <p>You are: {this.state.animalAnswer}</p>
                     <hr/>
                 </div>
 

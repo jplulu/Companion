@@ -61,6 +61,11 @@ public class UserController {
             return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
+    @GetMapping("/{username}/survey")
+    public ResponseEntity<?> getSurvey(@PathVariable("username") String username) throws EntityNotFoundException {
+        return new ResponseEntity<>(userService.getSurvey(username), HttpStatus.OK);
+    }
+
     @PreAuthorize("#username == authentication.principal.username")
     @GetMapping("/{username}/matches")
     public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException {
