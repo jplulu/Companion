@@ -61,6 +61,7 @@ public class UserController {
             return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @GetMapping("/{username}/survey")
     public ResponseEntity<?> getSurvey(@PathVariable("username") String username) throws EntityNotFoundException {
         return new ResponseEntity<>(userService.getSurvey(username), HttpStatus.OK);
