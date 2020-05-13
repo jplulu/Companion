@@ -48,6 +48,7 @@ export const setupUserProfile = (username, userDetails, history) => (dispatch) =
     axios.put(url, userDetails)
         .then(() => {
             dispatch(getUserData(username));
+            dispatch({ type: CLEAR_ERRORS });
             history.push('/survey')
         })
         .catch(err => console.log(err));
@@ -65,6 +66,7 @@ export const setupUserSurvey = (username, surveyResults, history) => (dispatch) 
                         type: SET_MATCHES,
                         payload: res.data
                     });
+                    dispatch({ type: CLEAR_ERRORS });
                     history.push('/');
                 })
                 .catch(err => console.log(err.response))

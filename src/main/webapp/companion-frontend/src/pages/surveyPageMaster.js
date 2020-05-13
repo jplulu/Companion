@@ -3,6 +3,11 @@ import  CheckBox  from '../components/CheckBox'
 import {setupUserSurvey} from "../redux/actions/userAction";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+
+const styles = (theme) => ({
+    ...theme.spreadThis
+});
 
 class surveyPageMaster extends Component {
     constructor(props) {
@@ -378,6 +383,7 @@ class surveyPageMaster extends Component {
 }
 
 surveyPageMaster.propTypes = {
+    classes: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
     UI: PropTypes.object.isRequired,
     setupUserSurvey: PropTypes.func.isRequired
