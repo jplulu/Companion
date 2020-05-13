@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -67,8 +66,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public class ValidUserCheck{
         public boolean hasPermission(String username, String principal) {
             Profile profile = userRepository.findByUsername(principal).getProfile();
-//            System.out.println("Principal"+profile);
-//            System.out.println("Username"+userRepository.findByUsername(username).getProfile());
             List<User> matched = matchingService.getAllSysmatchUser(username);
             boolean hasPermission = false;
             for (User user : matched) {

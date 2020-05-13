@@ -38,16 +38,19 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @PutMapping("/{username}")
     public ResponseEntity<?> updateUserByUsername(@PathVariable("username") String username, @RequestBody User user) throws EntityNotFoundException, EntityExistsException {
         return new ResponseEntity<>(userService.updateUserByUsername(username, user), HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @PutMapping("/{username}/profile")
     public ResponseEntity<?> setUserProfile(@PathVariable("username") String username, @RequestBody Profile profile) throws IOException, EntityNotFoundException {
         return new ResponseEntity<>(userService.setUserProfile(username, profile), HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @PutMapping("/{username}/survey")
     public ResponseEntity<?> setSurvey(@PathVariable("username") String username, @RequestBody SurveyResultsDTO results) throws EntityNotFoundException {
         userService.setSurvey(username, results);
@@ -58,17 +61,20 @@ public class UserController {
             return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @GetMapping("/{username}/survey")
     public ResponseEntity<?> getSurvey(@PathVariable("username") String username) throws EntityNotFoundException {
         return new ResponseEntity<>(userService.getSurvey(username), HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @GetMapping("/{username}/matches")
     public ResponseEntity<?> getAllSysmatchUser(@PathVariable("username") String username) throws EntityNotFoundException {
         List<User> matchedUsers = matchingService.getAllSysmatchUser(username);
         return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
     }
 
+    @PreAuthorize("#username == authentication.principal.username")
     @PutMapping("/{username}/matches")
     public ResponseEntity<?> modifyMatchStatus(@PathVariable("username") String username, @RequestParam("id") long id, @RequestParam("status") String status) throws EntityNotFoundException {
         if(status.equals("refuse")) {

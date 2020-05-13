@@ -28,11 +28,6 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtTokenUtil;
 
-    @RequestMapping("/hello")
-    public String hello(){
-        return "Hello world";
-    }
-
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws BadCredentialsException, EntityNotFoundException {
         try {
