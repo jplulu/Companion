@@ -1,7 +1,28 @@
 # Companion
 
-To run the program using maven
-1) Clone the repository and unzip the file
-2) Navigate to the main companion folder
-3) Run command "maven package" to build the project
-4) Run command "mvn spring-boot:run" to run the program
+## Usage
+```
+git clone https://github.com/jplulu/Companion.git
+cd Companion/
+```
+### Run Locally
+Edit application.properties within Companion/src/main/resources
+  * Make sure spring.datasource.username is your mySQL username
+  * Make sure spring.datasource.password is your mySQL password
+  * Make sure file.upload-dir is a valid path on your machine (this is where images will be stored)
+  
+Create a database named 'companion' in mySQL
+
+```
+# Server
+mvn clean install
+mvn spring-boot:run
+  or
+java -jar target/companion.jar
+
+# Client
+cd src/main/webapp/companion-frontend/
+npm install
+npm start
+```
+
