@@ -41,7 +41,7 @@ class home extends Component {
             return (
                 <div>
                     <Typography variant="h1" color="primary" align="center">
-                        Welcome to companion
+                        Welcome to Companion
                     </Typography>
                     <Typography variant="h2" color="inherit" align="center">
                         A place to find new friends
